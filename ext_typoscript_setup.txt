@@ -1,0 +1,51 @@
+config.tx_extbase{
+    persistence{
+        classes{
+
+            Tx_Extbase_Domain_Model_FrontendUser {
+                subclasses {
+                    Tx_WsLogin_User = Tx_WsLogin_Domain_Model_User
+					
+          		}
+            }
+            
+            Tx_WsLogin_Domain_Model_User {
+                subclasses {
+                    Tx_WsLogin_TwitterUser = Tx_WsLogin_Domain_Model_TwitterUser
+					Tx_WsLogin_FacebookUser = Tx_WsLogin_Domain_Model_FacebookUser
+					Tx_WsLogin_GoogleUser = Tx_WsLogin_Domain_Model_GoogleUser
+					
+          		}
+            }
+
+            Tx_WsLogin_Domain_Model_User {
+                mapping {
+                    tableName = fe_users
+                    recordType = Tx_WsLogin_User
+                }
+            }
+            
+            Tx_WsLogin_Domain_Model_TwitterUser {
+                mapping {
+                    tableName = fe_users
+                    recordType = Tx_WsLogin_TwitterUser
+                }
+            }
+            
+            Tx_WsLogin_Domain_Model_FacebookUser {
+                mapping {
+                    tableName = fe_users
+                    recordType = Tx_WsLogin_FacebookUser
+                }
+            }
+            
+            Tx_WsLogin_Domain_Model_GoogleUser {
+                mapping {
+                    tableName = fe_users
+                    recordType = Tx_WsLogin_GoogleUser
+                }
+            }
+            
+    	}
+    }
+}

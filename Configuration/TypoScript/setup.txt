@@ -1,0 +1,30 @@
+plugin.tx_wslogin {
+	view {
+		templateRootPath = {$plugin.tx_wslogin.view.templateRootPath}
+		partialRootPath = {$plugin.tx_wslogin.view.partialRootPath}
+		layoutRootPath = {$plugin.tx_wslogin.view.layoutRootPath}
+	}
+	persistence {
+		storagePid = {$plugin.tx_wslogin.persistence.storagePid}
+	}
+}
+
+plugin.tx_wslogin._CSS_DEFAULT_STYLE (
+	input.f3-form-error {
+		background-color:#FF9F9F;
+		border: 1px #FF0000 solid;
+	}
+
+	.tx-ws-login table {
+		border-collapse:separate;
+		border-spacing:10px;
+	}
+
+	.tx-ws-login table th {
+		font-weight:bold;
+	}
+
+	.tx-ws-login table td {
+		vertical-align:top;
+	}
+)

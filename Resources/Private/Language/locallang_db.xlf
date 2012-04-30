@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2012-04-36T15:44:36Z" product-name="ws_login">
+		<header/>
+		<body>
+
+			<trans-unit id="tx_wslogin_domain_model_user">
+				<source>User</source>
+			</trans-unit>
+			
+			<trans-unit id="fe_users.tx_extbase_type.Tx_WsLogin_User">
+				<source>Websafari Social Login User</source>
+			</trans-unit>
+			<trans-unit id="tx_wslogin_domain_model_user.tx_extbase_type">
+				<source>Record Type</source>
+			</trans-unit>
+			<trans-unit id="tx_wslogin_domain_model_user.tx_extbase_type.0">
+				<source>Default</source>
+			</trans-unit>
+			<trans-unit id="tx_wslogin_domain_model_user.tx_extbase_type.Tx_WsLogin_User">
+				<source> User</source>
+			</trans-unit>
+			<trans-unit id="tx_wslogin_domain_model_twitteruser">
+				<source>Twitter User</source>
+			</trans-unit>
+			<trans-unit id="tx_wslogin_domain_model_twitteruser.ws_twitter_id">
+				<source>Ws Twitter Id</source>
+			</trans-unit>
+			
+			<trans-unit id="fe_users.tx_extbase_type.Tx_WsLogin_TwitterUser">
+				<source>Websafari Social Login TwitterUser</source>
+			</trans-unit>
+			
+			<trans-unit id="tx_wslogin_domain_model_facebookuser">
+				<source>Facebook User</source>
+			</trans-unit>
+			<trans-unit id="tx_wslogin_domain_model_facebookuser.ws_facebook_id">
+				<source>Ws Facebook Id</source>
+			</trans-unit>
+			
+			<trans-unit id="fe_users.tx_extbase_type.Tx_WsLogin_FacebookUser">
+				<source>Websafari Social Login FacebookUser</source>
+			</trans-unit>
+			
+			<trans-unit id="tx_wslogin_domain_model_googleuser">
+				<source>Google User</source>
+			</trans-unit>
+			<trans-unit id="tx_wslogin_domain_model_googleuser.ws_google_id">
+				<source>Ws Google Id</source>
+			</trans-unit>
+			
+			<trans-unit id="fe_users.tx_extbase_type.Tx_WsLogin_GoogleUser">
+				<source>Websafari Social Login GoogleUser</source>
+			</trans-unit>
+			
+			<trans-unit id="tx_wslogin_domain_model_login">
+				<source>Login</source>
+			</trans-unit>
+
+		</body>
+	</file>
+</xliff>
