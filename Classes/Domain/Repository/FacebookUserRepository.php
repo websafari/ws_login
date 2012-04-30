@@ -37,6 +37,35 @@
 class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Domain_Repository_UserRepository {
 
     /**
+     * @var Tx_WsLogin_Domain_Model_FacebookUser
+     */
+    protected $user;
+
+    /**
+     * @return string
+     */
+    public function getUserIdFromAPI() {
+        $userData = $this->FbGraphCall();
+
+        //todo: update with actual user data
+        return '123456';
+    }
+
+    /**
+     * @return Tx_WsLogin_Domain_Model_FacebookUser
+     */
+    public function getUserFromAPI() {
+        $this->user = t3lib_div::makeInstance('Tx_WsLogin_Domain_Model_FacebookUser');
+
+        $userData = $this->FbGraphCall();
+
+        //todo: set all relevant fields
+        $this->user->setWsFacebookId('123456');
+
+        return $this->user;
+    }
+
+    /**
      * @param string $ws_facebook_id
      * @return Tx_WsLogin_Domain_Model_FacebookUser
      */
@@ -48,6 +77,13 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
         )
             ->execute()
             ->getFirst();
+    }
+
+    /**
+     *
+     */
+    private function FbGraphCall() {
+        //todo: implement fb api call
     }
 }
 ?>
