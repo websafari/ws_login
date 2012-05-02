@@ -43,25 +43,122 @@
  * @author Miladin Bojic <m.bojic@websafari.eu>
  */
 class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
-	/**
-	 * @var Tx_WsLogin_Domain_Model_User
-	 */
-	protected $fixture;
+    /**
+     * @var Tx_WsLogin_Domain_Repository_FacebookUserRepository
+     */
+    protected $mockFacebookUserRepository;
+
+    /**
+     * @var Tx_WsLogin_Service_LoginService
+     */
+    protected $mockLoginService;
+
+    /**
+     * @var Tx_WsLogin_Controller_UserController
+     */
+    protected $fixture;
+
+    /**
+     * @var string
+     */
+    protected $ws_facebook_id;
+
+    /**
+     * @var Tx_WsLogin_Domain_Model_FacebookUser
+     */
+    protected $facebookUser;
 
 	public function setUp() {
-		$this->fixture = new Tx_WsLogin_Domain_Model_User();
-	}
+        $this->ws_facebook_id = '123456';
+        $this->facebookUser = new Tx_WsLogin_Domain_Model_FacebookUser();
+        $this->facebookUser->setWsFacebookId($this->ws_facebook_id);
+
+        $this->mockFacebookUserRepository = $this->getMock(
+            'Tx_WsLogin_Domain_Repository_FacebookUserRepository',
+            array(
+                'getUserIdFromAPI',
+                'getUserFromAPI',
+                'getUserByFBId',
+                'update',
+                'add'
+            ),
+            array(),
+            '',
+            FALSE
+        );
+        $this->mockLoginService = $this->getMock(
+            'Tx_WsLogin_Service_LoginService',
+            array('login', 'logout'),
+            array(),
+            '',
+            FALSE
+        );
+
+		$this->fixture = new Tx_WsLogin_Controller_UserController();
+        $this->fixture->injectFacebookUserRepository($this->mockFacebookUserRepository);
+        $this->fixture->injectLoginService($this->mockLoginService);
+    }
 
 	public function tearDown() {
 		unset($this->fixture);
 	}
 
-	/**
-	 * @test
-	 */
-	public function dummyMethod() {
-		$this->markTestIncomplete();
-	}
+    /**
+     * @test
+     */
+    public function facebookLoginActionWorksWhenUserExistsInDB() {
+        $this->mockFacebookUserRepository->expects($this->once())
+            ->method('getUserIdFromAPI')
+            ->will($this->returnValue($this->ws_facebook_id));
+
+        $this->mockFacebookUserRepository->expects($this->once())
+            ->method('getUserByFBId')
+            ->with($this->ws_facebook_id)
+            ->will($this->returnValue($this->facebookUser));
+
+        $this->mockFacebookUserRepository->expects($this->once())
+            ->method('getUserFromAPI')
+            ->will($this->returnValue($this->facebookUser));
+
+        $this->mockFacebookUserRepository->expects($this->once())
+            ->method('update')
+            ->with(clone $this->facebookUser);
+
+        $this->mockLoginService->expects($this->once())
+            ->method('login')
+            ->with(clone $this->facebookUser);
+
+        $this->fixture->facebookLoginAction();
+    }
+
+    /**
+     * @test
+     */
+    public function facebookLoginActionWorksWhenUserDoesntExistsInDB() {
+        $this->mockFacebookUserRepository->expects($this->once())
+            ->method('getUserIdFromAPI')
+            ->will($this->returnValue($this->ws_facebook_id));
+
+        $this->mockFacebookUserRepository->expects($this->once())
+            ->method('getUserByFBId')
+            ->with($this->ws_facebook_id)
+            ->will($this->returnValue(null));
+
+        $this->mockFacebookUserRepository->expects($this->once())
+            ->method('getUserFromAPI')
+            ->will($this->returnValue($this->facebookUser));
+
+        // - expect it to add a new user to repository
+        $this->mockFacebookUserRepository->expects($this->once())
+            ->method('add')
+            ->with(clone $this->facebookUser);
+
+        $this->mockLoginService->expects($this->once())
+            ->method('login')
+            ->with(clone $this->facebookUser);
+
+        $this->fixture->facebookLoginAction();
+    }
 
 }
 ?>

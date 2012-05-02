@@ -36,22 +36,37 @@
  */
 class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_ActionController {
 
-	/**
-	 * userRepository
-	 *
-	 * @var Tx_WsLogin_Domain_Repository_UserRepository
-	 */
-	protected $userRepository;
+    /**
+     * facebookUserRepository
+     *
+     * @var Tx_WsLogin_Domain_Repository_FacebookUserRepository
+     */
+    protected $facebookUserRepository;
 
-	/**
-	 * injectUserRepository
-	 *
-	 * @param Tx_WsLogin_Domain_Repository_UserRepository $userRepository
-	 * @return void
-	 */
-	public function injectUserRepository(Tx_WsLogin_Domain_Repository_UserRepository $userRepository) {
-		$this->userRepository = $userRepository;
-	}
+    /**
+     * @var Tx_WsLogin_Service_LoginService
+     */
+    protected $loginService;
+
+    /**
+     * injectFacebookUserRepository
+     *
+     * @param Tx_WsLogin_Domain_Repository_FacebookUserRepository $facebookUserRepository
+     * @return void
+     */
+    public function injectFacebookUserRepository(Tx_WsLogin_Domain_Repository_FacebookUserRepository $facebookUserRepository) {
+        $this->facebookUserRepository = $facebookUserRepository;
+    }
+
+    /**
+     * injectLoginService
+     *
+     * @param Tx_WsLogin_Service_LoginService $loginService
+     * @return void
+     */
+    public function injectLoginService(Tx_WsLogin_Service_LoginService $loginService) {
+        $this->loginService = $loginService;
+    }
 
 	/**
 	 * action facebookLogin
@@ -59,7 +74,19 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 	 * @return void
 	 */
 	public function facebookLoginAction() {
+        $ws_facebook_id = $this->facebookUserRepository->getUserIdFromAPI();
+        //todo: check if an id was returned
 
+        $facebookUser = $this->facebookUserRepository->getUserByFBId($ws_facebook_id);
+        if ($facebookUser != null) {
+            $facebookUser = $this->facebookUserRepository->getUserFromAPI();
+            $this->facebookUserRepository->update($facebookUser);
+        } else {
+            $facebookUser = $this->facebookUserRepository->getUserFromAPI();
+            $this->facebookUserRepository->add($facebookUser);
+        }
+
+        $this->loginService->login($facebookUser);
 	}
 
 	/**

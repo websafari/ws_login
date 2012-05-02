@@ -73,8 +73,8 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
         $query = $this->createQuery();
         return $query
             ->matching(
-            $query->like('ws_facebook_id', $ws_facebook_id)
-        )
+                $query->like('ws_facebook_id', $ws_facebook_id)
+            )
             ->execute()
             ->getFirst();
     }

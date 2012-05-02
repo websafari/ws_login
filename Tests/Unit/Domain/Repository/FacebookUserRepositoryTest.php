@@ -78,11 +78,21 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepositoryTest extends Tx_Extbase
             'tx_extbase_type' => 'Tx_WsLogin_FacebookUser',
         ));
 
+        // get result
+        $facebookUser = $this->fixture->getUserByFBId($ws_facebook_id);
+
         // check result
         $this->assertSame(
             $ws_facebook_id,
-            $this->fixture->getUserByFBId($ws_facebook_id)->getWsFacebookId()
+            $facebookUser->getWsFacebookId()
         );
+    }
+
+    /**
+     * @test
+     */
+    public function dummyMethod() {
+        $this->markTestIncomplete();
     }
 }
 

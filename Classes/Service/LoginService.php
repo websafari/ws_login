@@ -36,5 +36,19 @@
  */
 class Tx_WsLogin_Service_LoginService implements t3lib_Singleton {
 
+    /**
+     * @param Tx_WsLogin_Domain_Model_User $user
+     */
+    public function login(Tx_WsLogin_Domain_Model_User $user) {
+
+    }
+
+    /**
+     * @param Tx_WsLogin_Domain_Model_User $user
+     */
+    public function logout(Tx_WsLogin_Domain_Model_User $user) {
+
+    }
+
 }
 ?>
