@@ -49,11 +49,20 @@ class Tx_WsLogin_Service_LoginServiceTest extends Tx_Extbase_Tests_Unit_BaseTest
      */
     protected $fixture;
 
+    /**
+     * @var Tx_Phpunit_Framework
+     */
+    protected $testingFramework;
+
     public function setUp() {
+        $this->testingFramework = new Tx_Phpunit_Framework('fe_users');
+        $this->testingFramework->createFakeFrontEnd();
+
         $this->fixture = new Tx_WsLogin_Service_LoginService();
     }
 
     public function tearDown() {
+        $this->testingFramework->cleanUp();
         unset($this->fixture);
     }
 
@@ -61,14 +70,20 @@ class Tx_WsLogin_Service_LoginServiceTest extends Tx_Extbase_Tests_Unit_BaseTest
      * @test
      */
     public function login() {
+        $facebookUser = new Tx_WsLogin_Domain_Model_FacebookUser();
+        $this->fixture->login($facebookUser);
 
+        $this->assertTrue($this->testingFramework->isLoggedIn());
     }
 
     /**
      * @test
      */
     public function logout() {
+        $this->testingFramework->createAndLoginFrontEndUser();
+        $this->fixture->logout();
 
+        $this->assertFalse($this->testingFramework->isLoggedIn());
     }
 
     /**
