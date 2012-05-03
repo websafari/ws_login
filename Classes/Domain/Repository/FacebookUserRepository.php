@@ -37,32 +37,70 @@
 class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Domain_Repository_UserRepository {
 
     /**
-     * @var Tx_WsLogin_Domain_Model_FacebookUser
-     */
-    protected $user;
-
-    /**
      * @return string
      */
     public function getUserIdFromAPI() {
-        $userData = $this->FbGraphCall();
+        require_once('Resources/Private/facebook-php-sdk/facebook.php');
+        //todo: make $facebook injectable, so it can be tested
+        $facebook = new Facebook(array(
+            'appId' => 'YOUR_APP_ID',
+            'secret' => 'YOUR_APP_SECRET'
+        ));
 
-        //todo: update with actual user data
-        return '123456';
+        $userId = $facebook->getUser();
+
+        if ($userId) {
+            try {
+                // Proceed knowing you have a logged in user who's authenticated.
+                $user_profile = $facebook->api('/me');
+            } catch (FacebookApiException $e) {
+                error_log($e);
+                $userId = null;
+            }
+        }
+        //todo: if there is no user, make him log in..
+        return $userId;
     }
 
     /**
      * @return Tx_WsLogin_Domain_Model_FacebookUser
      */
     public function getUserFromAPI() {
-        $this->user = t3lib_div::makeInstance('Tx_WsLogin_Domain_Model_FacebookUser');
+        require_once('Resources/Private/facebook-php-sdk/facebook.php');
+        //todo: make $facebook injectable, so it can be tested
+        $facebook = new Facebook(array(
+            'appId' => 'YOUR_APP_ID',
+            'secret' => 'YOUR_APP_SECRET'
+        ));
 
-        $userData = $this->FbGraphCall();
+        $userId = $facebook->getUser();
+        $user_profile = null;
 
-        //todo: set all relevant fields
-        $this->user->setWsFacebookId('123456');
+        if ($userId) {
+            try {
+                // Proceed knowing you have a logged in user who's authenticated.
+                $user_profile = $facebook->api('/me');
+            } catch (FacebookApiException $e) {
+                error_log($e);
+                $userId = null;
+            }
+        }
+        //todo: if there is no user, make him log in..
+        if (!$userId && !$user_profile) {
+            return null;
+        }
 
-        return $this->user;
+        /* @var $user Tx_WsLogin_Domain_Model_FacebookUser */
+        $user = t3lib_div::makeInstance('Tx_WsLogin_Domain_Model_FacebookUser');
+        $user->setWsFacebookId($userId);
+        $user->setUsername($user_profile['username']);
+        $user->setFirstName($user_profile['first_name']);
+        $user->setLastName($user_profile['last_name']);
+        $user->setCountry($user_profile['locale']);
+
+
+
+        return $user;
     }
 
     /**
@@ -77,13 +115,6 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
             )
             ->execute()
             ->getFirst();
-    }
-
-    /**
-     *
-     */
-    private function FbGraphCall() {
-        //todo: implement fb api call
     }
 }
 ?>
