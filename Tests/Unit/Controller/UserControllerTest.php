@@ -160,5 +160,22 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
         $this->fixture->facebookLoginAction();
     }
 
+    /**
+     * @test
+     */
+    public function logoutActionWorks() {
+        $this->mockLoginService->expects($this->once())
+            ->method('logout');
+
+        $this->fixture->logoutAction();
+    }
+
+    /**
+     * @test
+     */
+    public function showStatusActionWorks() {
+        //todo: test if it greps data and views it
+    }
+
 }
 ?>

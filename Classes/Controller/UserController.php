@@ -87,6 +87,8 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
         }
 
         $this->loginService->login($facebookUser);
+
+        //todo: view or redirect
 	}
 
 	/**
@@ -95,7 +97,7 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 	 * @return void
 	 */
 	public function twitterLoginAction() {
-
+        //todo: implement
 	}
 
 	/**
@@ -104,7 +106,7 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 	 * @return void
 	 */
 	public function googleLoginAction() {
-
+        //todo: implement
 	}
 
 	/**
@@ -113,7 +115,9 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 	 * @return void
 	 */
 	public function logoutAction() {
+        $this->loginService->logout();
 
+        //todo: view or redirect
 	}
 
 	/**
@@ -123,6 +127,8 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 	 */
 	public function showStatusAction() {
 
+
+        //todo: implement
 	}
 
 }
