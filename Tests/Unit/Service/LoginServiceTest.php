@@ -86,12 +86,6 @@ class Tx_WsLogin_Service_LoginServiceTest extends Tx_Extbase_Tests_Unit_BaseTest
             'password' => $password,
         ));
 
-        /*$facebookUser = new Tx_WsLogin_Domain_Model_FacebookUser();
-        $facebookUser->setPid($pid);
-        $facebookUser->setWsFacebookId($ws_facebook_id);
-        $facebookUser->setUsername($username);
-        $facebookUser->setPassword('');*/
-
         $this->fixture->login($uid);
 
         $this->assertTrue($this->testingFramework->isLoggedIn());
