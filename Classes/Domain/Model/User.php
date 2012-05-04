@@ -36,5 +36,37 @@
  */
 abstract class Tx_WsLogin_Domain_Model_User extends Tx_Extbase_Domain_Model_FrontendUser {
 
+    /**
+     * @return array
+     */
+    /*public function getUserDataArray() {
+        $array = array(
+            'uid' => $this->getUid(),
+            'pid' => $this->getPid(),
+            'username' => $this->getUsername(),
+            'password' => $this->getPassword(),
+            // warning: "[warning:Tx_Extbase_Persistence_ObjectStorage:private] => You should never see this warning. ..."
+            //'usergroup' => $this->getUsergroup(),
+            'first_name' => $this->getFirstName(),
+            'middle_name' => $this->getMiddleName(),
+            'last_name' => $this->getLastName(),
+            'address' => $this->getAddress(),
+            'telephone' => $this->getTelephone(),
+            'fax' => $this->getFax(),
+            'email' => $this->getEmail(),
+            'lockToDomain' => $this->getLockToDomain(),
+            'title' => $this->getTitle(),
+            'zip' => $this->getZip(),
+            'city' => $this->getCity(),
+            'country' => $this->getCountry(),
+            'www' => $this->getWww(),
+            'company' => $this->getCompany(),
+            'image' => $this->getImage(),
+            'lastlogin' => $this->getLastlogin(),
+            'is_online' => $this->getIsOnline(),
+        );
+
+        return $array;
+    }*/
 }
 ?>

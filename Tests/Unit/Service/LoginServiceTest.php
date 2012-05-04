@@ -64,22 +64,47 @@ class Tx_WsLogin_Service_LoginServiceTest extends Tx_Extbase_Tests_Unit_BaseTest
     public function tearDown() {
         $this->testingFramework->cleanUp();
         unset($this->fixture);
+        unset($this->faceUserRepository);
     }
 
     /**
      * @test
      */
-    public function login() {
-        $facebookUser = new Tx_WsLogin_Domain_Model_FacebookUser();
-        $this->fixture->login($facebookUser);
+    public function loginUserIsLoggedInCorrectly() {
+        $pid = '3';
+        $ws_facebook_id = '123456';
+        $tx_extbase_type = 'Tx_WsLogin_FacebookUser';
+        $username = 'testuser';
+        $password = '';
+
+        // create fake entries
+        $uid = $this->testingFramework->createRecord('fe_users', array(
+            'pid' => $pid,
+            'ws_facebook_id' => $ws_facebook_id,
+            'tx_extbase_type' => $tx_extbase_type,
+            'username' => $username,
+            'password' => $password,
+        ));
+
+        /*$facebookUser = new Tx_WsLogin_Domain_Model_FacebookUser();
+        $facebookUser->setPid($pid);
+        $facebookUser->setWsFacebookId($ws_facebook_id);
+        $facebookUser->setUsername($username);
+        $facebookUser->setPassword('');*/
+
+        $this->fixture->login($uid);
 
         $this->assertTrue($this->testingFramework->isLoggedIn());
+        $this->assertSame($pid, $GLOBALS['TSFE']->fe_user->user['pid']);
+        $this->assertSame($ws_facebook_id, $GLOBALS['TSFE']->fe_user->user['ws_facebook_id']);
+        $this->assertSame($tx_extbase_type, $GLOBALS['TSFE']->fe_user->user['tx_extbase_type']);
+        $this->assertSame($username, $GLOBALS['TSFE']->fe_user->user['username']);
     }
 
     /**
      * @test
      */
-    public function logout() {
+    public function logoutUserIsLoggedOut() {
         $this->testingFramework->createAndLoginFrontEndUser();
         $this->fixture->logout();
 

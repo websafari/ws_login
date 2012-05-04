@@ -37,17 +37,32 @@
 class Tx_WsLogin_Service_LoginService implements t3lib_Singleton {
 
     /**
-     * @param Tx_WsLogin_Domain_Model_User $user
+     * @param int $userId
      */
-    public function login(Tx_WsLogin_Domain_Model_User $user) {
+    public function login($userId) {
+        $this->logout();
 
+        //$tempUser = $user->getUserDataArray();
+
+        /* @var $fe_user tslib_feUserAuth */
+        /*$fe_user = $GLOBALS['TSFE']->fe_user;
+        $fe_user->createUserSession($tempUser);
+        $fe_user->loginSessionStarted = TRUE;
+        $fe_user->user = $fe_user->fetchUserSession();
+        $GLOBALS['TSFE']->loginUser = 1;*/
+
+        $GLOBALS['TSFE']->fe_user->createUserSession(array());
+        $GLOBALS['TSFE']->fe_user->user = $GLOBALS['TSFE']->fe_user->getRawUserByUid($userId);
+        $GLOBALS['TSFE']->fe_user->fetchGroupData();
+        $GLOBALS['TSFE']->loginUser = 1;
     }
 
     /**
      *
      */
     public function logout() {
-
+        $GLOBALS['TSFE']->fe_user->logoff();
+        $GLOBALS['TSFE']->loginUser = 0;
     }
 
 }
