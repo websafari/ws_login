@@ -104,13 +104,6 @@ class Tx_WsLogin_Service_LoginServiceTest extends Tx_Extbase_Tests_Unit_BaseTest
 
         $this->assertFalse($this->testingFramework->isLoggedIn());
     }
-
-    /**
-     * @test
-     */
-    public function dummyMethod() {
-        $this->markTestIncomplete();
-    }
 }
 
 ?>

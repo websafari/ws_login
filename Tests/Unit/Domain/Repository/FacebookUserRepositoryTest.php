@@ -87,13 +87,6 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepositoryTest extends Tx_Extbase
             $facebookUser->getWsFacebookId()
         );
     }
-
-    /**
-     * @test
-     */
-    public function dummyMethod() {
-        $this->markTestIncomplete();
-    }
 }
 
 ?>
