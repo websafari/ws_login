@@ -27,6 +27,9 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+
+require_once( t3lib_extMgm::extPath('ws_login') . 'Resources/PHP/facebook-php-sdk/facebook.php');
+
 /**
  *
  *
@@ -37,22 +40,35 @@
 class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Domain_Repository_UserRepository {
 
     /**
+     * @var Facebook
+     */
+    protected $facebook;
+
+    public function __construct() {
+        $this->injectFacebook(new Facebook(array()));
+        parent::__construct();
+    }
+
+    /**
+     * @param Facebook $facebook
+     */
+    public function injectFacebook(Facebook $facebook) {
+        $this->facebook = $facebook;
+        //todo: config this in conf or ts...
+        $this->facebook->setAppId('YOUR_APP_ID');
+        $this->facebook->setAppSecret('YOUR_APP_SECRET');
+    }
+
+    /**
      * @return string
      */
     public function getUserIdFromAPI() {
-        require_once('Resources/Private/facebook-php-sdk/facebook.php');
-        //todo: make $facebook injectable, so it can be tested
-        $facebook = new Facebook(array(
-            'appId' => 'YOUR_APP_ID',
-            'secret' => 'YOUR_APP_SECRET'
-        ));
-
-        $userId = $facebook->getUser();
+        $userId = $this->facebook->getUser();
 
         if ($userId) {
             try {
                 // Proceed knowing you have a logged in user who's authenticated.
-                $user_profile = $facebook->api('/me');
+                $user_profile = $this->facebook->api('/me');
             } catch (FacebookApiException $e) {
                 error_log($e);
                 $userId = null;
@@ -66,20 +82,13 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
      * @return Tx_WsLogin_Domain_Model_FacebookUser
      */
     public function getUserFromAPI() {
-        require_once('Resources/Private/facebook-php-sdk/facebook.php');
-        //todo: make $facebook injectable, so it can be tested
-        $facebook = new Facebook(array(
-            'appId' => 'YOUR_APP_ID',
-            'secret' => 'YOUR_APP_SECRET'
-        ));
-
-        $userId = $facebook->getUser();
+        $userId = $this->facebook->getUser();
         $user_profile = null;
 
         if ($userId) {
             try {
                 // Proceed knowing you have a logged in user who's authenticated.
-                $user_profile = $facebook->api('/me');
+                $user_profile = $this->facebook->api('/me');
             } catch (FacebookApiException $e) {
                 error_log($e);
                 $userId = null;
@@ -96,9 +105,6 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
         $user->setUsername($user_profile['username']);
         $user->setFirstName($user_profile['first_name']);
         $user->setLastName($user_profile['last_name']);
-        $user->setCountry($user_profile['locale']);
-
-
 
         return $user;
     }

@@ -27,6 +27,8 @@
      *  This copyright notice MUST APPEAR in all copies of the script!
      ***************************************************************/
 
+require_once( t3lib_extMgm::extPath('ws_login') . 'Resources/PHP/facebook-php-sdk/facebook.php');
+
     /**
      * Test case for class Tx_WsLogin_Domain_Repository_UserRepositoryTest.
      *
@@ -54,9 +56,32 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepositoryTest extends Tx_Extbase
      */
     protected $testingFramework;
 
+    /**
+     * @var Facebook
+     */
+    protected $facebookMock;
+
+    /**
+     * @var int
+     */
+    protected $ws_facebook_id;
+
     public function setUp() {
         $this->testingFramework = new Tx_Phpunit_Framework('fe_users');
-        $this->fixture = new Tx_WsLogin_Domain_Repository_FacebookUserRepository();
+        //todo: inject facebook library..
+        $this->fixture = t3lib_div::makeInstance('Tx_WsLogin_Domain_Repository_FacebookUserRepository');
+
+        $this->facebookMock = $this->getMock(
+            'Facebook',
+            array('getUser', 'api'),
+            array(),
+            '',
+            FALSE
+        );
+
+        $this->fixture->injectFacebook($this->facebookMock);
+
+        $this->ws_facebook_id = '123456';
     }
 
     public function tearDown() {
@@ -67,8 +92,46 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepositoryTest extends Tx_Extbase
     /**
      * @test
      */
-    public function getUserByFBIdReturnsFBUserWithCorrectId() {
+    public function getUserIdFromAPIWorks() {
+        $this->facebookMock->expects($this->once())
+            ->method('getUser')
+            ->will($this->returnValue($this->ws_facebook_id));
 
+        $userId = $this->fixture->getUserIdFromAPI();
+    }
+
+    /**
+     * @test
+     */
+    public function getUserFromAPIWorks() {
+        $this->facebookMock->expects($this->once())
+            ->method('getUser')
+            ->will($this->returnValue($this->ws_facebook_id));
+
+        $meArray = array(
+            'username' => 'testname',
+            'first_name' => 'testfirstname',
+            'last_name' => 'testlastname',
+            'local' => 'US',
+        );
+
+        $this->facebookMock->expects($this->once())
+            ->method('api')
+            ->with('/me')
+            ->will($this->returnValue($meArray));
+
+        /** @var Tx_WsLogin_Domain_Model_User */
+        $user = $this->fixture->getUserFromAPI();
+
+        $this->assertSame($meArray['username'], $user->getUsername());
+        $this->assertSame($meArray['first_name'], $user->getFirstName());
+        $this->assertSame($meArray['last_name'], $user->getLastName());
+    }
+
+    /**
+     * @test
+     */
+    public function getUserByFBIdReturnsFBUserWithCorrectId() {
         $ws_facebook_id = 'testid123abc';
 
         // create fake entries
