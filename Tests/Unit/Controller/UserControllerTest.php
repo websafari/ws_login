@@ -126,7 +126,7 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
 
         $this->mockLoginService->expects($this->once())
             ->method('login')
-            ->with(clone $this->facebookUser);
+            ->with($this->ws_facebook_id);
 
         $this->fixture->facebookLoginAction();
     }
@@ -155,7 +155,7 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
 
         $this->mockLoginService->expects($this->once())
             ->method('login')
-            ->with(clone $this->facebookUser);
+            ->with($this->ws_facebook_id);
 
         $this->fixture->facebookLoginAction();
     }
