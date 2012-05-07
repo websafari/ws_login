@@ -68,25 +68,44 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
         $this->loginService = $loginService;
     }
 
+    /**
+     * action showStatus
+     *
+     * @return string
+     */
+    public function showStatusAction() {
+        $loggedIn = $this->loginService->isLoggedIn();
+        $this->view->assign('loggedIn', $loggedIn);
+
+        return $this->view->render();
+    }
+
 	/**
 	 * action facebookLogin
 	 *
+     * @var $facebookUserDB Tx_WsLogin_Domain_Model_FacebookUser
+     * @var $facebookUser Tx_WsLogin_Domain_Model_FacebookUser
+     *
 	 * @return void
 	 */
 	public function facebookLoginAction() {
         $ws_facebook_id = $this->facebookUserRepository->getUserIdFromAPI();
         //todo: check if an id was returned
 
-        $facebookUser = $this->facebookUserRepository->getUserByFBId($ws_facebook_id);
-        if ($facebookUser != null) {
-            $facebookUser = $this->facebookUserRepository->getUserFromAPI();
-            $this->facebookUserRepository->update($facebookUser);
+        $facebookUserAPI = $this->facebookUserRepository->getUserFromAPI();
+        /*if ($facebookUserAPI === null) {
+            return;
+            throw new ErrorException('$facebookUserAPI === null');
+        }*/
+
+        $facebookUserDB = $this->facebookUserRepository->getUserByFBId($ws_facebook_id);
+        if ($facebookUserDB != null) {
+            $this->facebookUserRepository->update($facebookUserAPI);
         } else {
-            $facebookUser = $this->facebookUserRepository->getUserFromAPI();
-            $this->facebookUserRepository->add($facebookUser);
+            $this->facebookUserRepository->add($facebookUserAPI);
         }
 
-        $this->loginService->login($facebookUser);
+        $this->loginService->login($ws_facebook_id);
 
         //todo: view or redirect
 	}
@@ -118,17 +137,6 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
         $this->loginService->logout();
 
         //todo: view or redirect
-	}
-
-	/**
-	 * action showStatus
-	 *
-	 * @return void
-	 */
-	public function showStatusAction() {
-
-
-        //todo: implement
 	}
 
 }

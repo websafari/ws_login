@@ -106,6 +106,17 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
     /**
      * @test
      */
+    public function showStatusActionWorks() {
+        $this->mockLoginService->expects($this->once())
+            ->method('isLoggedIn')
+            ->will($this->returnValue(true));
+
+        //todo: test view
+    }
+
+    /**
+     * @test
+     */
     public function facebookLoginActionWorksWhenUserExistsInDB() {
         $this->mockFacebookUserRepository->expects($this->once())
             ->method('getUserIdFromAPI')
@@ -168,13 +179,6 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
             ->method('logout');
 
         $this->fixture->logoutAction();
-    }
-
-    /**
-     * @test
-     */
-    public function showStatusActionWorks() {
-        //todo: test if it greps data and views it
     }
 
 }
