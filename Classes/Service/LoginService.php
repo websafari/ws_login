@@ -56,5 +56,15 @@ class Tx_WsLogin_Service_LoginService implements t3lib_Singleton {
         $GLOBALS['TSFE']->loginUser = 0;
     }
 
+    /**
+     * This method is copied from Tx_Phpunit_Framework::isLoggedIn
+     *
+     * @return bool
+     */
+    public function isLoggedIn() {
+        return isset($GLOBALS['TSFE']) && is_object($GLOBALS['TSFE'])
+            && is_array($GLOBALS['TSFE']->fe_user->user);
+    }
+
 }
 ?>

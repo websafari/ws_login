@@ -104,6 +104,22 @@ class Tx_WsLogin_Service_LoginServiceTest extends Tx_Extbase_Tests_Unit_BaseTest
 
         $this->assertFalse($this->testingFramework->isLoggedIn());
     }
+
+    /**
+     * @test
+     */
+    public function isLoggedInKnowsIfUserIsLoggedIn() {
+        $this->testingFramework->createAndLoginFrontEndUser();
+        $this->assertTrue($this->fixture->isLoggedIn());
+    }
+
+    /**
+     * @test
+     */
+    public function isLoggedInKnowsIfUserIsLoggedOut() {
+        $this->testingFramework->logoutFrontEndUser();
+        $this->assertFalse($this->fixture->isLoggedIn());
+    }
 }
 
 ?>
