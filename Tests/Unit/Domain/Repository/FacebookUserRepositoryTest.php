@@ -79,7 +79,7 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepositoryTest extends Tx_Extbase
             FALSE
         );
 
-        $this->fixture->injectFacebook($this->facebookMock);
+        $this->fixture->setFacebook($this->facebookMock);
 
         $this->ws_facebook_id = '123456';
     }
@@ -132,21 +132,19 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepositoryTest extends Tx_Extbase
      * @test
      */
     public function getUserByFBIdReturnsFBUserWithCorrectId() {
-        $ws_facebook_id = 'testid123abc';
-
         // create fake entries
         $this->testingFramework->createRecord('fe_users', array(
             'pid' => 0,
-            'ws_facebook_id' => $ws_facebook_id,
+            'ws_facebook_id' => $this->ws_facebook_id,
             'tx_extbase_type' => 'Tx_WsLogin_FacebookUser',
         ));
 
         // get result
-        $facebookUser = $this->fixture->getUserByFBId($ws_facebook_id);
+        $facebookUser = $this->fixture->getUserByFBId($this->ws_facebook_id);
 
         // check result
         $this->assertSame(
-            $ws_facebook_id,
+            $this->ws_facebook_id,
             $facebookUser->getWsFacebookId()
         );
     }
