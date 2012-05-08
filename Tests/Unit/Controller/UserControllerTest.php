@@ -54,6 +54,11 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
     protected $mockLoginService;
 
     /**
+     * @var Tx_Fluid_View_TemplateView
+     */
+    protected $mockView;
+
+    /**
      * @var Tx_WsLogin_Controller_UserController
      */
     protected $fixture;
@@ -80,7 +85,7 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
                 'getUserFromAPI',
                 'getUserByFBId',
                 'update',
-                'add'
+                'add',
             ),
             array(),
             '',
@@ -88,30 +93,64 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
         );
         $this->mockLoginService = $this->getMock(
             'Tx_WsLogin_Service_LoginService',
-            array('login', 'logout'),
+            array(
+                'login',
+                'logout',
+                'isLoggedIn',
+            ),
+            array(),
+            '',
+            FALSE
+        );
+        $this->fixture = $this->getAccessibleMock(
+            'Tx_WsLogin_Controller_UserController',
+            array(
+                'dummy', //this line is intended like this
+            ),
+            array(),
+            '',
+            FALSE
+        );
+        $this->mockView = $this->getMock(
+            'Tx_Fluid_View_TemplateView',
+            array(
+                'assign',
+                'render',
+            ),
             array(),
             '',
             FALSE
         );
 
-		$this->fixture = new Tx_WsLogin_Controller_UserController();
         $this->fixture->injectFacebookUserRepository($this->mockFacebookUserRepository);
         $this->fixture->injectLoginService($this->mockLoginService);
+        $this->fixture->_set('view', $this->mockView);
     }
 
 	public function tearDown() {
-		unset($this->fixture);
+        unset($this->mockFacebookUserRepository);
+        unset($this->mockLoginService);
+        unset($this->mockView);
+        unset($this->fixture);
+        unset($this->ws_facebook_id);
+        unset($this->facebookUser);
 	}
 
     /**
      * @test
      */
     public function showStatusActionWorks() {
+        $loggedIn = true;
+
         $this->mockLoginService->expects($this->once())
             ->method('isLoggedIn')
-            ->will($this->returnValue(true));
+            ->will($this->returnValue($loggedIn));
 
-        //todo: test view
+        $this->mockView->expects($this->once())
+            ->method('assign')
+            ->with('loggedIn', $loggedIn);
+
+        $this->fixture->showStatusAction();
     }
 
     /**
