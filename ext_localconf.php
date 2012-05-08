@@ -3,7 +3,8 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 
-Tx_Extbase_Utility_Extension::configurePlugin(
+//Everything
+/*Tx_Extbase_Utility_Extension::configurePlugin(
 	$_EXTKEY,
 	'Sl',
 	array(
@@ -15,6 +16,20 @@ Tx_Extbase_Utility_Extension::configurePlugin(
 		'User' => '',
 		
 	)
+);*/
+
+//Status
+Tx_Extbase_Utility_Extension::configurePlugin(
+    $_EXTKEY,
+    'status',
+    array('User' => 'showStatus')
+);
+
+//Login "Form"
+Tx_Extbase_Utility_Extension::configurePlugin(
+    $_EXTKEY,
+    'loginForm',
+    array('User' => 'showLogin, facebookLogin, twitterLogin, googleLogin, logout')
 );
 
 ?>
