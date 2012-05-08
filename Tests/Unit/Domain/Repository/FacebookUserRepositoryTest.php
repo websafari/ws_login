@@ -87,6 +87,8 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepositoryTest extends Tx_Extbase
     public function tearDown() {
         $this->testingFramework->cleanUp();
         unset($this->fixture);
+        unset($this->facebookMock);
+        unset($this->ws_facebook_id);
     }
 
     /**
