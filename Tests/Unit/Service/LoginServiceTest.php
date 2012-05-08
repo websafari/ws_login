@@ -64,7 +64,6 @@ class Tx_WsLogin_Service_LoginServiceTest extends Tx_Extbase_Tests_Unit_BaseTest
     public function tearDown() {
         $this->testingFramework->cleanUp();
         unset($this->fixture);
-        unset($this->faceUserRepository);
     }
 
     /**
