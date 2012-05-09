@@ -101,6 +101,15 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
         return $this->view->render();
     }
 
+    /**
+     * action showLogin
+     *
+     * @return string
+     */
+    public function showLoginAction() {
+        return $this->view->render();
+    }
+
 	/**
 	 * action facebookLogin
 	 *

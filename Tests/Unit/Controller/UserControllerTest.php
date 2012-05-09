@@ -150,6 +150,9 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
             ->method('assign')
             ->with('loggedIn', $loggedIn);
 
+        $this->mockView->expects($this->once())
+            ->method('render');
+
         $this->fixture->showStatusAction();
     }
 
