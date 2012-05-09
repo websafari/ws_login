@@ -49,7 +49,10 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
      */
     public function __construct() {
         //todo: config this in conf or ts...
-        $this->setFacebook(new Facebook(array('YOUR_APP_ID', 'YOUR_APP_SECRET')));
+        $this->setFacebook(new Facebook(array(
+            'appId' =>'',
+            'secret' => '')
+        ));
         parent::__construct();
     }
 
@@ -58,6 +61,13 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
      */
     public function setFacebook(Facebook $facebook) {
         $this->facebook = $facebook;
+    }
+
+    /**
+     * @return Facebook
+     */
+    public function getFacebook() {
+        return $this->facebook;
     }
 
     /**

@@ -84,7 +84,7 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
                 'getUserIdFromAPI',
                 'getUserFromAPI',
                 'getUserByFBId',
-                'update',
+                'replace',
                 'add',
             ),
             array(),
@@ -121,10 +121,14 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
             '',
             FALSE
         );
+        $mockRequest = $this->getMock(
+            $this->buildAccessibleProxy('Tx_Extbase_MVC_Request'), array('dummy'), array(), '', FALSE
+        );
 
         $this->fixture->injectFacebookUserRepository($this->mockFacebookUserRepository);
         $this->fixture->injectLoginService($this->mockLoginService);
         $this->fixture->_set('view', $this->mockView);
+        $this->fixture->_set('request', $mockRequest);
     }
 
 	public function tearDown() {
@@ -174,12 +178,15 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
             ->will($this->returnValue($this->facebookUser));
 
         $this->mockFacebookUserRepository->expects($this->once())
-            ->method('update')
-            ->with(clone $this->facebookUser);
+            ->method('replace')
+            ->with(clone $this->facebookUser, clone $this->facebookUser);
 
         $this->mockLoginService->expects($this->once())
             ->method('login')
             ->with($this->ws_facebook_id);
+
+        $this->fixture->expects($this->once)
+            ->method('redirect');
 
         $this->fixture->facebookLoginAction();
     }
@@ -201,7 +208,6 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
             ->method('getUserFromAPI')
             ->will($this->returnValue($this->facebookUser));
 
-        // - expect it to add a new user to repository
         $this->mockFacebookUserRepository->expects($this->once())
             ->method('add')
             ->with(clone $this->facebookUser);

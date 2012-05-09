@@ -122,17 +122,17 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
         $ws_facebook_id = $this->facebookUserRepository->getUserIdFromAPI();
         if ($ws_facebook_id === null) {
             //todo: display error!
-            $this->redirect('showLogin');
+            $this->redirectToUri($this->facebookUserRepository->getFacebook()->getLoginUrl());
         }
         $facebookUserAPI = $this->facebookUserRepository->getUserFromAPI();
         if ($facebookUserAPI === null) {
             //todo: display error!
-            $this->redirect('showLogin');
+            $this->redirectToUri($this->facebookUserRepository->getFacebook()->getLoginUrl());
         }
 
         $facebookUserDB = $this->facebookUserRepository->getUserByFBId($ws_facebook_id);
-        if ($facebookUserDB != null) {
-            $this->facebookUserRepository->update($facebookUserAPI);
+        if ($facebookUserDB !== null) {
+            $this->facebookUserRepository->replace($facebookUserDB, $facebookUserAPI);
         } else {
             $this->facebookUserRepository->add($facebookUserAPI);
         }
