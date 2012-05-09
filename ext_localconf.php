@@ -29,8 +29,7 @@ Tx_Extbase_Utility_Extension::configurePlugin(
 Tx_Extbase_Utility_Extension::configurePlugin(
     $_EXTKEY,
     'loginForm',
-    //array('User' => 'showLogin, facebookLogin, twitterLogin, googleLogin, logout')
-    array('User' => 'googleLogin')
+    array('User' => 'showLogin, facebookLogin, twitterLogin, googleLogin, logout')
 );
 
 ?>
