@@ -49,9 +49,10 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
      */
     public function __construct() {
         //todo: config this in conf or ts...
+        //todo: reset App Secret when used elsewhere
         $this->setFacebook(new Facebook(array(
-            'appId' =>'',
-            'secret' => '')
+            'appId' =>'383342618383884',
+            'secret' => 'f169724bfaef6c944815026a23718e1c')
         ));
         parent::__construct();
     }
@@ -116,6 +117,7 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
         $user->setUsername($user_profile['username']);
         $user->setFirstName($user_profile['first_name']);
         $user->setLastName($user_profile['last_name']);
+        $user->setName($user_profile['first_name'] . ' ' . $user_profile['last_name']);
 
         return $user;
     }

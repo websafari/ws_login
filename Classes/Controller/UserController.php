@@ -121,23 +121,29 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 	public function facebookLoginAction() {
         $ws_facebook_id = $this->facebookUserRepository->getUserIdFromAPI();
         if ($ws_facebook_id === null) {
-            //todo: display error!
             $this->redirectToUri($this->facebookUserRepository->getFacebook()->getLoginUrl());
         }
         $facebookUserAPI = $this->facebookUserRepository->getUserFromAPI();
         if ($facebookUserAPI === null) {
-            //todo: display error!
             $this->redirectToUri($this->facebookUserRepository->getFacebook()->getLoginUrl());
         }
 
         $facebookUserDB = $this->facebookUserRepository->getUserByFBId($ws_facebook_id);
-        if ($facebookUserDB !== null) {
-            $this->facebookUserRepository->replace($facebookUserDB, $facebookUserAPI);
-        } else {
+        if ($facebookUserDB == null) {
             $this->facebookUserRepository->add($facebookUserAPI);
+
+            //$facebookUserDB = $this->facebookUserRepository->getUserByFBId($ws_facebook_id);
+        } else {
+            $facebookUserDB->setUsername($facebookUserAPI->getUsername());
+            $facebookUserDB->setFirstName($facebookUserAPI->getFirstName());
+            $facebookUserDB->setLastName($facebookUserAPI->getLastName());
+            $facebookUserDB->setName($facebookUserAPI->getName());
+
+            $this->facebookUserRepository->update($facebookUserDB);
         }
 
-        $this->loginService->login($ws_facebook_id);
+        //todo: fix login
+        //$this->loginService->login($facebookUserDB->getUid());
 
         $this->redirect('showLogin');
 	}
