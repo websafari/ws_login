@@ -120,13 +120,15 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 	 */
 	public function facebookLoginAction() {
         $ws_facebook_id = $this->facebookUserRepository->getUserIdFromAPI();
-        //todo: check if an id was returned
-
+        if ($ws_facebook_id === null) {
+            //todo: display error!
+            $this->redirect('showLogin');
+        }
         $facebookUserAPI = $this->facebookUserRepository->getUserFromAPI();
-        /*if ($facebookUserAPI === null) {
-            return;
-            throw new ErrorException('$facebookUserAPI === null');
-        }*/
+        if ($facebookUserAPI === null) {
+            //todo: display error!
+            $this->redirect('showLogin');
+        }
 
         $facebookUserDB = $this->facebookUserRepository->getUserByFBId($ws_facebook_id);
         if ($facebookUserDB != null) {
@@ -137,7 +139,7 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 
         $this->loginService->login($ws_facebook_id);
 
-        //todo: view or redirect
+        $this->redirect('showLogin');
 	}
 
 	/**
