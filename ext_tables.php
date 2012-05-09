@@ -201,31 +201,4 @@ $TCA['fe_users']['types']['Tx_WsLogin_GoogleUser']['showitem'] = $TCA['fe_users'
 $TCA['fe_users']['types']['Tx_WsLogin_GoogleUser']['showitem'] .= ',--div--;LLL:EXT:ws_login/Resources/Private/Language/locallang_db.xml:tx_wslogin_domain_model_googleuser,';
 $TCA['fe_users']['types']['Tx_WsLogin_GoogleUser']['showitem'] .= 'ws_google_id';
 
-			t3lib_extMgm::addLLrefForTCAdescr('tx_wslogin_domain_model_login', 'EXT:ws_login/Resources/Private/Language/locallang_csh_tx_wslogin_domain_model_login.xml');
-			t3lib_extMgm::allowTableOnStandardPages('tx_wslogin_domain_model_login');
-			$TCA['tx_wslogin_domain_model_login'] = array(
-				'ctrl' => array(
-					'title'	=> 'LLL:EXT:ws_login/Resources/Private/Language/locallang_db.xml:tx_wslogin_domain_model_login',
-					'label' => 'uid',
-					'tstamp' => 'tstamp',
-					'crdate' => 'crdate',
-					'cruser_id' => 'cruser_id',
-					'dividers2tabs' => TRUE,
-					'versioningWS' => 2,
-					'versioning_followPages' => TRUE,
-					'origUid' => 't3_origuid',
-					'languageField' => 'sys_language_uid',
-					'transOrigPointerField' => 'l10n_parent',
-					'transOrigDiffSourceField' => 'l10n_diffsource',
-					'delete' => 'deleted',
-					'enablecolumns' => array(
-						'disabled' => 'hidden',
-						'starttime' => 'starttime',
-						'endtime' => 'endtime',
-					),
-					'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY) . 'Configuration/TCA/Login.php',
-					'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Icons/tx_wslogin_domain_model_login.gif'
-				),
-			);
-
 ?>
