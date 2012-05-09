@@ -49,7 +49,7 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
      * @var Tx_WsLogin_Domain_Repository_GoogleUserRepository
      */
 
-    //protected $googleUserRepository;
+    protected $googleUserRepository;
 
     /**
      * @var Tx_WsLogin_Service_LoginService
@@ -73,11 +73,11 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
      * @return void
      */
 
-    /*
+
     public function injectGoogleUserRepository(Tx_WsLogin_Domain_Repository_GoogleUserRepository $googleUserRepository) {
         $this->googleUserRepository = $googleUserRepository;
     }
-    */
+
 
     /**
      * injectLoginService
@@ -156,6 +156,7 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 	 */
 	public function googleLoginAction() {
 
+        /*
         require_once( t3lib_extMgm::extPath('ws_login') . 'Resources/PHP/google-php-sdk/GoogleOpenID.php');
         $getParams = $this->request->getArguments();
         if($_GET['ws_login']['googlelogin'] == 'login'){
@@ -170,6 +171,7 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
                 $this->view->assign('user_id', $user_id);
             }
         }
+        */
 
         /*
         $user_id = $this->googleUserRepository->getUserIdFromAPI();
@@ -180,6 +182,54 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
         */
         return $this->view->render();
 	}
+
+    /**
+     * action googleSignIn
+     *
+     * @return void
+     */
+
+    public function googleSignInAction() {
+        /*
+        $local_cObj = t3lib_div::makeInstance('tslib_cObj');
+        $linkConf['parameter'] = $GLOBALS['TSFE']->id;
+        $linkConf['additionalParams'] = '&tx_wslogin_loginform[action]=googleReturn';
+        $linkConf['returnLast'] = 'url';
+        $lastUrl = $local_cObj->typolink('', $linkConf);
+        */
+        require_once( t3lib_extMgm::extPath('ws_login') . 'Resources/PHP/google-php-sdk/GoogleOpenID.php');
+        $googleLogin = GoogleOpenID::createRequest("/~miladinbojic/introductionpackage-4.6.8/index.php?id=".$GLOBALS['TSFE']->id."&tx_wslogin_loginform[action]=googleReturn");
+        $googleLogin->redirect();
+
+        return $this->view->render();
+    }
+
+    /**
+     * action googleSignIn
+     *
+     * @return void
+     */
+
+    public function googleReturnAction() {
+        /*
+        $googleUserAPI = $this->googleUserRepository->getUserFromAPI();
+        if($googleUserAPI){
+            $this->view->assign('loggedIn', TRUE);
+            $this->view->assign('user_id', $googleUserAPI);
+        }
+        */
+
+        require_once( t3lib_extMgm::extPath('ws_login') . 'Resources/PHP/google-php-sdk/GoogleOpenID.php');
+        $googleLogin = GoogleOpenID::getResponse();
+        if($googleLogin->success()){
+            $this->view->assign('loggedIn', TRUE);
+            $user_id = $googleLogin->identity();
+            $this->view->assign('user_id', $user_id);
+        }
+
+        return $this->view->render();
+    }
+
 
 	/**
 	 * action logout

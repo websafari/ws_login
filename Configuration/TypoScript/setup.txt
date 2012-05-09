@@ -1,3 +1,4 @@
+
 plugin.tx_wslogin {
 	view {
 		templateRootPath = {$plugin.tx_wslogin.view.templateRootPath}

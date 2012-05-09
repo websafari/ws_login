@@ -68,17 +68,10 @@ class Tx_WsLogin_Domain_Repository_GoogleUserRepository extends Tx_WsLogin_Domai
      * @return string
      */
     public function getUserIdFromAPI() {
-        if($_GET['ws_login']['googlelogin'] == 'login'){
-            $googleLogin = GoogleOpenID::createRequest("/~miladinbojic/introductionpackage-4.6.8/index.php?id=75&no_cache=1&ws_login[googlelogin]=return");
-            $googleLogin->redirect();
-            return false;
-        }
-        if($_GET['ws_login']['googlelogin'] == 'return'){
-            $googleLogin = GoogleOpenID::getResponse();
-            if($googleLogin->success()){
-                $user_id = $googleLogin->identity();
-                return $user_id;
-            }
+        $googleLogin = GoogleOpenID::getResponse();
+        if($googleLogin->success()){
+            $user_id = $googleLogin->identity();
+            return $user_id;
         }
     }
 
