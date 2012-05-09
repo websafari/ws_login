@@ -1,0 +1,9 @@
+<f:if condition="{loggedIn}">
+    <f:then>
+        <h1>{user_id}</h1>
+    </f:then>
+    <f:else>
+        <f:link.page pageUid="75" additionalParams="{no_cache: 1, ws_login: '{googlelogin: login}'}">test typolink</f:link.page>
+        <h1><a href="index.php?id=75&no_cache=1&ws_login[googlelogin]=login">Login with your Google Account</a></h1>
+    </f:else>
+</f:if>

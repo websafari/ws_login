@@ -44,6 +44,14 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
     protected $facebookUserRepository;
 
     /**
+     * googleUserRepository
+     *
+     * @var Tx_WsLogin_Domain_Repository_GoogleUserRepository
+     */
+
+    //protected $googleUserRepository;
+
+    /**
      * @var Tx_WsLogin_Service_LoginService
      */
     protected $loginService;
@@ -57,6 +65,19 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
     public function injectFacebookUserRepository(Tx_WsLogin_Domain_Repository_FacebookUserRepository $facebookUserRepository) {
         $this->facebookUserRepository = $facebookUserRepository;
     }
+
+    /**
+     * injectGoogleUserRepository
+     *
+     * @param Tx_WsLogin_Domain_Repository_GoogleUserRepository $googleUserRepository
+     * @return void
+     */
+
+    /*
+    public function injectGoogleUserRepository(Tx_WsLogin_Domain_Repository_GoogleUserRepository $googleUserRepository) {
+        $this->googleUserRepository = $googleUserRepository;
+    }
+    */
 
     /**
      * injectLoginService
@@ -125,7 +146,30 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 	 * @return void
 	 */
 	public function googleLoginAction() {
-        //todo: implement
+
+        require_once( t3lib_extMgm::extPath('ws_login') . 'Resources/PHP/google-php-sdk/GoogleOpenID.php');
+        $getParams = $this->request->getArguments();
+        if($_GET['ws_login']['googlelogin'] == 'login'){
+            $googleLogin = GoogleOpenID::createRequest("/~miladinbojic/introductionpackage-4.6.8/index.php?id=75&no_cache=1&ws_login[googlelogin]=return");
+            $googleLogin->redirect();
+        }
+        if($_GET['ws_login']['googlelogin'] == 'return'){
+            $googleLogin = GoogleOpenID::getResponse();
+            if($googleLogin->success()){
+                $this->view->assign('loggedIn', TRUE);
+                $user_id = $googleLogin->identity();
+                $this->view->assign('user_id', $user_id);
+            }
+        }
+
+        /*
+        $user_id = $this->googleUserRepository->getUserIdFromAPI();
+        if($user_id) {
+            $this->view->assign('loggedIn', TRUE);
+            $this->view->assign('user_id', $user_id);
+        }
+        */
+        return $this->view->render();
 	}
 
 	/**
@@ -140,4 +184,6 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 	}
 
 }
+
+
 ?>
