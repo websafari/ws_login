@@ -107,6 +107,9 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
      * @return string
      */
     public function showLoginAction() {
+        $loggedIn = $this->loginService->isLoggedIn();
+        $this->view->assign('loggedIn', $loggedIn);
+
         return $this->view->render();
     }
 
@@ -260,7 +263,7 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 	public function logoutAction() {
         $this->loginService->logout();
 
-        //todo: view or redirect
+        $this->redirect('showLogin');
 	}
 
 }

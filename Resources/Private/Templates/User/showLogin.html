@@ -1,17 +1,27 @@
-<ul>
-    <li>
-        <f:link.action action="facebookLogin" title="login with facebook">
-            login with facebook
-        </f:link.action>
-    </li>
-    <li>
-        <f:link.action action="twitterLogin" title="login with twitter">
-            login with twitter
-        </f:link.action>
-    </li>
-    <li>
-        <f:link.action action="googleSignIn" title="login with google">
-            login with google
-        </f:link.action>
-    </li>
-</ul>
+<f:if condition="{loggedIn}">
+    <f:then>
+        <p>
+            You are allready logged in, do you what to
+            <f:link.action action="logout" title="log out">log out</f:link.action>?
+        </p>
+    </f:then>
+    <f:else>
+        <ul>
+            <li>
+                <f:link.action action="facebookLogin" title="login with facebook">
+                    login with facebook
+                </f:link.action>
+            </li>
+            <li>
+                <f:link.action action="twitterLogin" title="login with twitter">
+                    login with twitter
+                </f:link.action>
+            </li>
+            <li>
+                <f:link.action action="googleSignIn" title="login with google">
+                    login with google
+                </f:link.action>
+            </li>
+        </ul>
+    </f:else>
+</f:if>
