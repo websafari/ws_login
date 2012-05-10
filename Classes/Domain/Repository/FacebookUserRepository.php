@@ -65,6 +65,13 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
     }
 
     /**
+     * @return Facebook
+     */
+    public function getFacebook() {
+        return $this->facebook;
+    }
+
+    /**
      * @return string
      */
     public function getUserIdFromAPI() {
