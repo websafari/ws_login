@@ -131,8 +131,6 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
         $facebookUserDB = $this->facebookUserRepository->getUserByFBId($ws_facebook_id);
         if ($facebookUserDB == null) {
             $this->facebookUserRepository->add($facebookUserAPI);
-
-            //$facebookUserDB = $this->facebookUserRepository->getUserByFBId($ws_facebook_id);
         } else {
             $facebookUserDB->setUsername($facebookUserAPI->getUsername());
             $facebookUserDB->setFirstName($facebookUserAPI->getFirstName());
@@ -142,11 +140,26 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
             $this->facebookUserRepository->update($facebookUserDB);
         }
 
-        //todo: fix login
-        //$this->loginService->login($facebookUserDB->getUid());
+        /**
+         * An uid is needed to login the FacebookUser, the uid is only created
+         * when the user is made persistent. The User becomes persistent when
+         * this action ends. The only solution is to login the User in an
+         * other action by redirecting.
+         */
+        $this->redirect('createFacebookSession', NULL, NULL, array('ws_facebook_id' => $ws_facebook_id));
+	}
+
+    /**
+     * action createFacebookSession
+     *
+     * @param string $ws_facebook_id
+     */
+    public function createFacebookSessionAction($ws_facebook_id) {
+        $facebookUserDB = $this->facebookUserRepository->getUserByFBId($ws_facebook_id);
+        $this->loginService->login($facebookUserDB->getUid());
 
         $this->redirect('showLogin');
-	}
+    }
 
 	/**
 	 * action twitterLogin
