@@ -31,31 +31,11 @@ Tx_Extbase_Utility_Extension::configurePlugin(
     $_EXTKEY,
     'loginForm',
     array(
-        'User' =>
-        '
-            showLogin,
-            facebookLogin,
-            createFacebookSession,
-            twitterLogin,
-            googleLogin,
-            googleSignIn,
-            googleReturn,
-            logout
-        '
+        'User' =>'showLogin,facebookLogin,createFacebookSession,twitterLogin,googleLogin,googleSignIn,googleReturn,logout'
     ),
     array(
-        'User' =>
-        '
-            showLogin,
-            facebookLogin,
-            createFacebookSession,
-            twitterLogin,
-            googleLogin,
-            googleSignIn,
-            googleReturn,
-            logout
-        '
-    ),
+        'User' =>'showLogin,facebookLogin,createFacebookSession,twitterLogin,googleLogin,googleSignIn,googleReturn,logout'
+    )
 );
 
 ?>
