@@ -73,6 +73,11 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
      */
     protected $facebookUser;
 
+    /**
+     * @var Tx_Extbase_MVC_Request
+     */
+    protected $mockRequest;
+
 	public function setUp() {
         $this->ws_facebook_id = '123456';
         $this->facebookUser = new Tx_WsLogin_Domain_Model_FacebookUser();
@@ -121,10 +126,18 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
             '',
             FALSE
         );
+        $this->mockRequest = $this->getMock(
+            $this->buildAccessibleProxy('Tx_Extbase_MVC_Request'),
+            array('dummy'),
+            array(),
+            '',
+            FALSE
+        );
 
         $this->fixture->injectFacebookUserRepository($this->mockFacebookUserRepository);
         $this->fixture->injectLoginService($this->mockLoginService);
         $this->fixture->_set('view', $this->mockView);
+        $this->fixture->_set('request', $this->mockRequest);
     }
 
 	public function tearDown() {
@@ -173,13 +186,16 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
             ->method('getUserFromAPI')
             ->will($this->returnValue($this->facebookUser));
 
+        //todo: test if user is updated
         $this->mockFacebookUserRepository->expects($this->once())
             ->method('update')
             ->with(clone $this->facebookUser);
 
-        $this->mockLoginService->expects($this->once())
-            ->method('login')
-            ->with($this->ws_facebook_id);
+        //todo: fix redirect error in test: "redirect() only supports web requests."
+        // maybe this helps: http://twitcode.org/show/244/phpunit-test-for-extbase-controller
+        // or maybe replace Tx_Extbase_MVC_Request with Tx_Extbase_MVC_Web_Request
+        $this->fixture->expects($this->once())
+            ->method('redirect');
 
         $this->fixture->facebookLoginAction();
     }
@@ -201,17 +217,35 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
             ->method('getUserFromAPI')
             ->will($this->returnValue($this->facebookUser));
 
-        // - expect it to add a new user to repository
         $this->mockFacebookUserRepository->expects($this->once())
             ->method('add')
             ->with(clone $this->facebookUser);
 
-        $this->mockLoginService->expects($this->once())
-            ->method('login')
-            ->with($this->ws_facebook_id);
+        //todo: fix redirect error in test: "redirect() only supports web requests."
+        // maybe this helps: http://twitcode.org/show/244/phpunit-test-for-extbase-controller
+        // or maybe replace Tx_Extbase_MVC_Request with Tx_Extbase_MVC_Web_Request
+        $this->fixture->expects($this->once())
+            ->method('redirect');
 
         $this->fixture->facebookLoginAction();
     }
+
+    /**
+     * @test
+     */
+    /*public function createFacebookSessionActionWorks() {
+        $this->mockFacebookUserRepository->expects($this->once())
+            ->method('getUserFromAPI')
+            ->will($this->returnValue($this->facebookUser));
+
+        $this->mockLoginService->expects($this->once())
+            ->method('login');
+
+        $this->fixture->expects($this->once())
+            ->method('redirect');
+
+        $this->fixture->createFacebookSessionAction($this->ws_facebook_id);
+    }*/
 
     /**
      * @test

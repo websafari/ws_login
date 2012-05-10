@@ -22,6 +22,7 @@ if (!defined('TYPO3_MODE')) {
 Tx_Extbase_Utility_Extension::configurePlugin(
     $_EXTKEY,
     'status',
+    array('User' => 'showStatus'),
     array('User' => 'showStatus')
 );
 
@@ -29,8 +30,32 @@ Tx_Extbase_Utility_Extension::configurePlugin(
 Tx_Extbase_Utility_Extension::configurePlugin(
     $_EXTKEY,
     'loginForm',
-    //array('User' => 'showLogin, facebookLogin, twitterLogin, googleLogin, logout')
-    array('User' => 'showLogin, googleLogin, googleSignIn, googleReturn')
+    array(
+        'User' =>
+        '
+            showLogin,
+            facebookLogin,
+            createFacebookSession,
+            twitterLogin,
+            googleLogin,
+            googleSignIn,
+            googleReturn,
+            logout
+        '
+    ),
+    array(
+        'User' =>
+        '
+            showLogin,
+            facebookLogin,
+            createFacebookSession,
+            twitterLogin,
+            googleLogin,
+            googleSignIn,
+            googleReturn,
+            logout
+        '
+    ),
 );
 
 ?>

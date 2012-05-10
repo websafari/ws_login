@@ -121,26 +121,45 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 	public function facebookLoginAction() {
         $ws_facebook_id = $this->facebookUserRepository->getUserIdFromAPI();
         if ($ws_facebook_id === null) {
-            //todo: display error!
-            $this->redirect('showLogin');
+            $this->redirectToUri($this->facebookUserRepository->getFacebook()->getLoginUrl());
         }
         $facebookUserAPI = $this->facebookUserRepository->getUserFromAPI();
         if ($facebookUserAPI === null) {
-            //todo: display error!
-            $this->redirect('showLogin');
+            $this->redirectToUri($this->facebookUserRepository->getFacebook()->getLoginUrl());
         }
 
         $facebookUserDB = $this->facebookUserRepository->getUserByFBId($ws_facebook_id);
-        if ($facebookUserDB != null) {
-            $this->facebookUserRepository->update($facebookUserAPI);
-        } else {
+        if ($facebookUserDB == null) {
             $this->facebookUserRepository->add($facebookUserAPI);
+        } else {
+            $facebookUserDB->setUsername($facebookUserAPI->getUsername());
+            $facebookUserDB->setFirstName($facebookUserAPI->getFirstName());
+            $facebookUserDB->setLastName($facebookUserAPI->getLastName());
+            $facebookUserDB->setName($facebookUserAPI->getName());
+
+            $this->facebookUserRepository->update($facebookUserDB);
         }
 
-        $this->loginService->login($ws_facebook_id);
+        /**
+         * An uid is needed to login the FacebookUser, the uid is only created
+         * when the user is made persistent. The User becomes persistent when
+         * this action ends. The only solution is to login the User in an
+         * other action by redirecting.
+         */
+        $this->redirect('createFacebookSession', NULL, NULL, array('ws_facebook_id' => $ws_facebook_id));
+	}
+
+    /**
+     * action createFacebookSession
+     *
+     * @param string $ws_facebook_id
+     */
+    public function createFacebookSessionAction($ws_facebook_id) {
+        $facebookUserDB = $this->facebookUserRepository->getUserByFBId($ws_facebook_id);
+        $this->loginService->login($facebookUserDB->getUid());
 
         $this->redirect('showLogin');
-	}
+    }
 
 	/**
 	 * action twitterLogin

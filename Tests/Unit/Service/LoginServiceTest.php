@@ -74,7 +74,6 @@ class Tx_WsLogin_Service_LoginServiceTest extends Tx_Extbase_Tests_Unit_BaseTest
         $ws_facebook_id = '123456';
         $tx_extbase_type = 'Tx_WsLogin_FacebookUser';
         $username = 'testuser';
-        $password = '';
 
         // create fake entries
         $uid = $this->testingFramework->createRecord('fe_users', array(
@@ -82,7 +81,6 @@ class Tx_WsLogin_Service_LoginServiceTest extends Tx_Extbase_Tests_Unit_BaseTest
             'ws_facebook_id' => $ws_facebook_id,
             'tx_extbase_type' => $tx_extbase_type,
             'username' => $username,
-            'password' => $password,
         ));
 
         $this->fixture->login($uid);
