@@ -195,7 +195,7 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
         // maybe this helps: http://twitcode.org/show/244/phpunit-test-for-extbase-controller
         // or maybe replace Tx_Extbase_MVC_Request with Tx_Extbase_MVC_Web_Request
         $this->fixture->expects($this->once())
-            ->method('redirect');
+            ->method('forward');
 
         $this->fixture->facebookLoginAction();
     }
@@ -225,7 +225,7 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
         // maybe this helps: http://twitcode.org/show/244/phpunit-test-for-extbase-controller
         // or maybe replace Tx_Extbase_MVC_Request with Tx_Extbase_MVC_Web_Request
         $this->fixture->expects($this->once())
-            ->method('redirect');
+            ->method('forward');
 
         $this->fixture->facebookLoginAction();
     }
@@ -242,7 +242,7 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
             ->method('login');
 
         $this->fixture->expects($this->once())
-            ->method('redirect');
+            ->method('forward');
 
         $this->fixture->createFacebookSessionAction($this->ws_facebook_id);
     }*/

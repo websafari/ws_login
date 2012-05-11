@@ -149,7 +149,7 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
          * this action ends. The only solution is to login the User in an
          * other action by redirecting.
          */
-        $this->redirect('createFacebookSession', NULL, NULL, array('ws_facebook_id' => $ws_facebook_id));
+        $this->forward('createFacebookSession', 'User', NULL, array('ws_facebook_id' => $ws_facebook_id));
 	}
 
     /**
@@ -161,7 +161,7 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
         $facebookUserDB = $this->facebookUserRepository->getUserByFBId($ws_facebook_id);
         $this->loginService->login($facebookUserDB->getUid());
 
-        $this->redirect('showLogin');
+        $this->forward('showLogin');
     }
 
 	/**
@@ -263,7 +263,7 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 	public function logoutAction() {
         $this->loginService->logout();
 
-        $this->redirect('showLogin');
+        $this->forward('showLogin');
 	}
 
 }
