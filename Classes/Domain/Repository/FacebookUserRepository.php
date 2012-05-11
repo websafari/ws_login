@@ -31,25 +31,36 @@
 require_once( t3lib_extMgm::extPath('ws_login') . 'Resources/PHP/facebook-php-sdk/facebook.php');
 
 /**
+ * Repository for FacebookUser, also connects to Facebook API.
  *
- *
- * @package ws_login
+ * @version $Id$
+ * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
+ * @package TYPO3
+ * @subpackage Websafari Social Login
+ *
+ * @author Florian Rachor <f.rachor@websafari.eu>
+ * @author Peter Grassberger <p.grassberger@websafari.eu>
+ * @author Augustin Malle <a.malle@websafari.eu>
+ * @author Miladin Bojic <m.bojic@websafari.eu>
  */
 class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Domain_Repository_UserRepository {
 
     /**
+     * Facebook from @link https://github.com/facebook/facebook-php-sdk facebook-php-sdk
+     *
      * @var Facebook
      */
     protected $facebook;
 
     /**
+     * Contructor creates Facebook instance
      *
+     * @todo: move Facebook config where it belongs..
+     * @todo: reset App secret
      */
     public function __construct() {
-        //todo: config this in conf or ts...
-        //todo: reset App Secret when used elsewhere
         $this->setFacebook(new Facebook(array(
             'appId' =>'383342618383884',
             'secret' => 'f169724bfaef6c944815026a23718e1c')
@@ -58,6 +69,8 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
     }
 
     /**
+     * Sets the facebook
+     *
      * @param Facebook $facebook
      */
     public function setFacebook(Facebook $facebook) {
@@ -65,14 +78,18 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
     }
 
     /**
-     * @return Facebook
+     * Gets the facebook
+     *
+     * @return Facebook $facebook
      */
     public function getFacebook() {
         return $this->facebook;
     }
 
     /**
-     * @return string
+     * Gets the Facebook Id from logged in user from Facebook API.
+     *
+     * @return string Facebook Id.
      */
     public function getUserIdFromAPI() {
         $userId = $this->facebook->getUser();
@@ -86,12 +103,13 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
                 $userId = null;
             }
         }
-        //todo: if there is no user, make him log in..
         return $userId;
     }
 
     /**
-     * @return Tx_WsLogin_Domain_Model_FacebookUser
+     * Creates and returns FacebookUser from user data from Facebook API.
+     *
+     * @return Tx_WsLogin_Domain_Model_FacebookUser user created from FB API data.
      */
     public function getUserFromAPI() {
         $userId = $this->facebook->getUser();
@@ -106,7 +124,6 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
                 $userId = null;
             }
         }
-        //todo: if there is no user, make him log in..
         if (!$userId && !$user_profile) {
             return null;
         }
@@ -123,14 +140,16 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
     }
 
     /**
+     * Gets FacebookUser from database by Facebook Id.
+     *
      * @param string $ws_facebook_id
-     * @return Tx_WsLogin_Domain_Model_FacebookUser
+     * @return Tx_WsLogin_Domain_Model_FacebookUser user from database.
      */
     public function getUserByFBId($ws_facebook_id) {
         $query = $this->createQuery();
         return $query
             ->matching(
-                $query->like('ws_facebook_id', $ws_facebook_id)
+                $query->equals('ws_facebook_id', $ws_facebook_id)
             )
             ->execute()
             ->getFirst();

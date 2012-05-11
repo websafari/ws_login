@@ -28,21 +28,32 @@
  ***************************************************************/
 
 /**
+ * Class for creating and removing user sessions.
  *
- *
- * @package ws_login
+ * @version $Id$
+ * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
+ * @package TYPO3
+ * @subpackage Websafari Social Login
+ *
+ * @author Florian Rachor <f.rachor@websafari.eu>
+ * @author Peter Grassberger <p.grassberger@websafari.eu>
+ * @author Augustin Malle <a.malle@websafari.eu>
+ * @author Miladin Bojic <m.bojic@websafari.eu>
  */
 class Tx_WsLogin_Service_LoginService implements t3lib_Singleton {
 
     /**
-     * @param $uid int
-     * @return bool
+     * Creates a user session.
+     *
+     * The user to be logged must exist in the fe_users database.
+     * If a user is already logged in, he is logged out.
+     *
+     * @param $uid int The uid of the user that shall be logged in.
+     * @return bool The return value of @see isLoggedIn()
      */
     public function login($uid) {
-        //todo: fix session, user doesnt seem to stay logged in..
-
         $this->logout();
 
         /** @var $fe_user tslib_feUserAuth */
@@ -56,7 +67,9 @@ class Tx_WsLogin_Service_LoginService implements t3lib_Singleton {
     }
 
     /**
-     * @return bool
+     * Removes current user session.
+     *
+     * @return bool The inverse return value of @see isLoggedIn()
      */
     public function logout() {
         $GLOBALS['TSFE']->fe_user->logoff();
@@ -66,9 +79,11 @@ class Tx_WsLogin_Service_LoginService implements t3lib_Singleton {
     }
 
     /**
-     * This method is copied from Tx_Phpunit_Framework::isLoggedIn
+     * Checks if the User is logged in.
      *
-     * @return bool
+     * This method is copied from @see Tx_Phpunit_Framework::isLoggedIn
+     *
+     * @return bool user logged in.
      */
     public function isLoggedIn() {
         return isset($GLOBALS['TSFE']) && is_object($GLOBALS['TSFE'])

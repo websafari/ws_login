@@ -68,7 +68,6 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepositoryTest extends Tx_Extbase
 
     public function setUp() {
         $this->testingFramework = new Tx_Phpunit_Framework('fe_users');
-        //todo: inject facebook library..
         $this->fixture = t3lib_div::makeInstance('Tx_WsLogin_Domain_Repository_FacebookUserRepository');
 
         $this->facebookMock = $this->getMock(

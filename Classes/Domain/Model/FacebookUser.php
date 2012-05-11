@@ -28,16 +28,24 @@
  ***************************************************************/
 
 /**
+ * FrontEndUser with Facebook Id
  *
- *
- * @package ws_login
+ * @version $Id$
+ * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
+ * @package TYPO3
+ * @subpackage Websafari Social Login
+ *
+ * @author Florian Rachor <f.rachor@websafari.eu>
+ * @author Peter Grassberger <p.grassberger@websafari.eu>
+ * @author Augustin Malle <a.malle@websafari.eu>
+ * @author Miladin Bojic <m.bojic@websafari.eu>
  */
 class Tx_WsLogin_Domain_Model_FacebookUser extends Tx_WsLogin_Domain_Model_User {
 
 	/**
-	 * Id for Facebook API
+	 * Id from Facebook API
 	 *
 	 * @var string
 	 * @validate NotEmpty
@@ -47,7 +55,7 @@ class Tx_WsLogin_Domain_Model_FacebookUser extends Tx_WsLogin_Domain_Model_User 
 	/**
 	 * Returns the wsFacebookId
 	 *
-	 * @return string $wsFacebookId
+	 * @return string $wsFacebookId Is the id from the Facebook API.
 	 */
 	public function getWsFacebookId() {
 		return $this->wsFacebookId;
@@ -56,7 +64,7 @@ class Tx_WsLogin_Domain_Model_FacebookUser extends Tx_WsLogin_Domain_Model_User 
 	/**
 	 * Sets the wsFacebookId
 	 *
-	 * @param string $wsFacebookId
+	 * @param string $wsFacebookId Is the id from the Facebook API.
 	 * @return void
 	 */
 	public function setWsFacebookId($wsFacebookId) {

@@ -28,11 +28,19 @@
  ***************************************************************/
 
 /**
+ * Main Controller
  *
- *
- * @package ws_login
+ * @version $Id$
+ * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
+ * @package TYPO3
+ * @subpackage Websafari Social Login
+ *
+ * @author Florian Rachor <f.rachor@websafari.eu>
+ * @author Peter Grassberger <p.grassberger@websafari.eu>
+ * @author Augustin Malle <a.malle@websafari.eu>
+ * @author Miladin Bojic <m.bojic@websafari.eu>
  */
 class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_ActionController {
 
@@ -52,6 +60,8 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
     protected $googleUserRepository;
 
     /**
+     * loginService
+     *
      * @var Tx_WsLogin_Service_LoginService
      */
     protected $loginService;
@@ -90,9 +100,11 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
     }
 
     /**
-     * action showStatus
+     * action showStatus displays status of the user.
      *
-     * @return string
+     * For example if the user is logged in or not.
+     *
+     * @return string $view
      */
     public function showStatusAction() {
         $loggedIn = $this->loginService->isLoggedIn();
@@ -102,9 +114,11 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
     }
 
     /**
-     * action showLogin
+     * action showLogin displays login "form".
      *
-     * @return string
+     * When the user is already logged in, a logout link is displayed.
+     *
+     * @return string $view
      */
     public function showLoginAction() {
         $loggedIn = $this->loginService->isLoggedIn();
@@ -114,7 +128,18 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
     }
 
 	/**
-	 * action facebookLogin
+	 * action facebookLogin adds or updates a FacebookUser it gets from the Repository.
+     *
+     * First this action tries to get the user from the api, if this fails it
+     * redirects to Facebook for app approval. Then this action looks if the
+     * user is persistent in the repository. If persistent, the user data is
+     * updated. If not, the new user is added to the repository.
+     *
+     * An uid is needed to login the FacebookUser, the uid is only created
+     * when the user is made persistent. The user becomes persistent when
+     * this action ends. The only solution is to login the User, is to
+     * redirect to an other action, in this chase
+     * @see createFacebookSession().
 	 *
      * @var $facebookUserDB Tx_WsLogin_Domain_Model_FacebookUser
      * @var $facebookUser Tx_WsLogin_Domain_Model_FacebookUser
@@ -122,14 +147,12 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 	 * @return void
 	 */
 	public function facebookLoginAction() {
-        $ws_facebook_id = $this->facebookUserRepository->getUserIdFromAPI();
-        if ($ws_facebook_id === null) {
-            $this->redirectToUri($this->facebookUserRepository->getFacebook()->getLoginUrl());
-        }
         $facebookUserAPI = $this->facebookUserRepository->getUserFromAPI();
         if ($facebookUserAPI === null) {
             $this->redirectToUri($this->facebookUserRepository->getFacebook()->getLoginUrl());
+            return;
         }
+        $ws_facebook_id = $facebookUserAPI->getWsFacebookId();
 
         $facebookUserDB = $this->facebookUserRepository->getUserByFBId($ws_facebook_id);
         if ($facebookUserDB == null) {
@@ -143,17 +166,11 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
             $this->facebookUserRepository->update($facebookUserDB);
         }
 
-        /**
-         * An uid is needed to login the FacebookUser, the uid is only created
-         * when the user is made persistent. The User becomes persistent when
-         * this action ends. The only solution is to login the User in an
-         * other action by redirecting.
-         */
         $this->forward('createFacebookSession', 'User', NULL, array('ws_facebook_id' => $ws_facebook_id));
 	}
 
     /**
-     * action createFacebookSession
+     * action createFacebookSession creates FacebookUser Login Session.
      *
      * @param string $ws_facebook_id
      */
@@ -167,10 +184,11 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 	/**
 	 * action twitterLogin
 	 *
+     * @todo: implement
 	 * @return void
 	 */
 	public function twitterLoginAction() {
-        //todo: implement
+
 	}
 
 	/**
@@ -256,7 +274,7 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 
 
 	/**
-	 * action logout
+	 * action logout logs out users.
 	 *
 	 * @return void
 	 */
