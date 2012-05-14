@@ -65,6 +65,8 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
             'appId' =>'383342618383884',
             'secret' => 'f169724bfaef6c944815026a23718e1c')
         ));
+
+        debug($this->settings['facebook-api']['appId']);
         parent::__construct();
     }
 

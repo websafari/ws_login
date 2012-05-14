@@ -48,4 +48,9 @@ config.tx_extbase{
             
     	}
     }
+    settings {
+        facebook-api {
+            appId = 383342618383884
+        }
+    }
 }

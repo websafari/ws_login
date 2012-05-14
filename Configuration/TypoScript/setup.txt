@@ -1,5 +1,9 @@
-
 plugin.tx_wslogin {
+    settings {
+        facebook-api {
+            appId = 383342618383884
+        }
+    }
 	view {
 		templateRootPath = {$plugin.tx_wslogin.view.templateRootPath}
 		partialRootPath = {$plugin.tx_wslogin.view.partialRootPath}

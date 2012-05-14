@@ -124,6 +124,8 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
         $loggedIn = $this->loginService->isLoggedIn();
         $this->view->assign('loggedIn', $loggedIn);
 
+        debug($this->settings['facebook-api']['appId']);
+
         return $this->view->render();
     }
 
