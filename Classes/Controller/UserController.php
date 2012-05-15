@@ -45,6 +45,13 @@
 class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_ActionController {
 
     /**
+     * userRepository
+     *
+     * @var Tx_WsLogin_Domain_Repository_UserRepository
+     */
+    protected $userRepository;
+
+    /**
      * facebookUserRepository
      *
      * @var Tx_WsLogin_Domain_Repository_FacebookUserRepository
@@ -65,6 +72,16 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
      * @var Tx_WsLogin_Service_LoginService
      */
     protected $loginService;
+
+    /**
+     * injectUserRepository
+     *
+     * @param Tx_WsLogin_Domain_Repository_UserRepository $userRepository
+     * @return void
+     */
+    public function injectUserRepository(Tx_WsLogin_Domain_Repository_UserRepository $userRepository) {
+        $this->userRepository = $userRepository;
+    }
 
     /**
      * injectFacebookUserRepository
@@ -109,6 +126,12 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
     public function showStatusAction() {
         $loggedIn = $this->loginService->isLoggedIn();
         $this->view->assign('loggedIn', $loggedIn);
+
+        if ($loggedIn) {
+            $loggedInUid = $this->loginService->getLoggedInUserUid();
+            $user = $this->userRepository->findByUid($loggedInUid);
+            $this->view->assign('user', $user);
+        }
 
         return $this->view->render();
     }

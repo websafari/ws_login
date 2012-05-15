@@ -117,6 +117,22 @@ class Tx_WsLogin_Service_LoginServiceTest extends Tx_Extbase_Tests_Unit_BaseTest
         $this->testingFramework->logoutFrontEndUser();
         $this->assertFalse($this->fixture->isLoggedIn());
     }
+
+    /**
+     * @test
+     */
+    public function getLoggedInUserUidReturnsLoggedInUserUid() {
+        /** @var $uid integer */
+        $uid = $this->testingFramework->createAndLoginFrontEndUser();
+        $this->assertSame($uid, $this->fixture->getLoggedInUserUid());
+    }
+
+    /**
+     * @test
+     */
+    public function getLoggedInUserUidReturnsZeroWhenNoUserLoggedIn() {
+        $this->assertSame(0, $this->fixture->getLoggedInUserUid());
+    }
 }
 
 ?>
