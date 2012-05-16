@@ -28,7 +28,7 @@
  ***************************************************************/
 
 /**
- * Test case for class Tx_WsLogin_Domain_Repository_UserRepositoryTest.
+ * Test case for class Tx_WsLogin_Service_LoginService.
  *
  * @version $Id$
  * @copyright Copyright belongs to the respective authors
@@ -116,6 +116,22 @@ class Tx_WsLogin_Service_LoginServiceTest extends Tx_Extbase_Tests_Unit_BaseTest
     public function isLoggedInKnowsIfUserIsLoggedOut() {
         $this->testingFramework->logoutFrontEndUser();
         $this->assertFalse($this->fixture->isLoggedIn());
+    }
+
+    /**
+     * @test
+     */
+    public function getLoggedInUserUidReturnsLoggedInUserUid() {
+        /** @var $uid integer */
+        $uid = $this->testingFramework->createAndLoginFrontEndUser();
+        $this->assertSame($uid, $this->fixture->getLoggedInUserUid());
+    }
+
+    /**
+     * @test
+     */
+    public function getLoggedInUserUidReturnsZeroWhenNoUserLoggedIn() {
+        $this->assertSame(0, $this->fixture->getLoggedInUserUid());
     }
 }
 

@@ -45,6 +45,13 @@
 class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_ActionController {
 
     /**
+     * userRepository
+     *
+     * @var Tx_WsLogin_Domain_Repository_UserRepository
+     */
+    protected $userRepository;
+
+    /**
      * facebookUserRepository
      *
      * @var Tx_WsLogin_Domain_Repository_FacebookUserRepository
@@ -65,6 +72,23 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
      * @var Tx_WsLogin_Service_LoginService
      */
     protected $loginService;
+
+    /**
+     * facebookService
+     *
+     * @var Tx_WsLogin_Service_FacebookService
+     */
+    protected $facebookService;
+
+    /**
+     * injectUserRepository
+     *
+     * @param Tx_WsLogin_Domain_Repository_UserRepository $userRepository
+     * @return void
+     */
+    public function injectUserRepository(Tx_WsLogin_Domain_Repository_UserRepository $userRepository) {
+        $this->userRepository = $userRepository;
+    }
 
     /**
      * injectFacebookUserRepository
@@ -100,6 +124,16 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
     }
 
     /**
+     * injectFacebookService
+     *
+     * @param Tx_WsLogin_Service_FacebookService $facebookService
+     * @return void
+     */
+    public function injectFacebookService(Tx_WsLogin_Service_FacebookService $facebookService) {
+        $this->facebookService = $facebookService;
+    }
+
+    /**
      * action showStatus displays status of the user.
      *
      * For example if the user is logged in or not.
@@ -109,6 +143,12 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
     public function showStatusAction() {
         $loggedIn = $this->loginService->isLoggedIn();
         $this->view->assign('loggedIn', $loggedIn);
+
+        if ($loggedIn) {
+            $loggedInUid = $this->loginService->getLoggedInUserUid();
+            $user = $this->userRepository->findByUid($loggedInUid);
+            $this->view->assign('user', $user);
+        }
 
         return $this->view->render();
     }
@@ -123,8 +163,6 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
     public function showLoginAction() {
         $loggedIn = $this->loginService->isLoggedIn();
         $this->view->assign('loggedIn', $loggedIn);
-
-        debug($this->settings['facebook-api']['appId']);
 
         return $this->view->render();
     }
@@ -151,7 +189,7 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 	public function facebookLoginAction() {
         $facebookUserAPI = $this->facebookUserRepository->getUserFromAPI();
         if ($facebookUserAPI === null) {
-            $this->redirectToUri($this->facebookUserRepository->getFacebook()->getLoginUrl());
+            $this->redirectToUri($this->facebookService->getFacebook()->getLoginUrl());
             return;
         }
         $ws_facebook_id = $facebookUserAPI->getWsFacebookId();

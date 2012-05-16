@@ -2,6 +2,7 @@ plugin.tx_wslogin {
     settings {
         facebook-api {
             appId = 383342618383884
+            secret = f169724bfaef6c944815026a23718e1c
         }
     }
 	view {

@@ -90,5 +90,23 @@ class Tx_WsLogin_Service_LoginService implements t3lib_Singleton {
             && is_array($GLOBALS['TSFE']->fe_user->user);
     }
 
+    /**
+     * Returns the uid of the logged in user.
+     *
+     * If no user is logged in returns 0.
+     *
+     * @todo: should it return an exception when no user is logged in.
+     *
+     * @return int logged in user uid or zero.
+     */
+    public function getLoggedInUserUid() {
+        if (!$this->isLoggedIn()) {
+            return (int) 0;
+        }
+        /** @var $fe_user tslib_feUserAuth */
+        $fe_user = $GLOBALS['TSFE']->fe_user;
+        return (int) $fe_user->user['uid'];
+    }
+
 }
 ?>

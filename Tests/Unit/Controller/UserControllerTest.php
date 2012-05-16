@@ -43,6 +43,12 @@
  * @author Miladin Bojic <m.bojic@websafari.eu>
  */
 class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_BaseTestCase {
+
+    /**
+     * @var Tx_WsLogin_Domain_Repository_UserRepository
+     */
+    protected $mockUserRepository;
+
     /**
      * @var Tx_WsLogin_Domain_Repository_FacebookUserRepository
      */
@@ -52,6 +58,11 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
      * @var Tx_WsLogin_Service_LoginService
      */
     protected $mockLoginService;
+
+    /**
+     * @var Tx_WsLogin_Service_FacebookService
+     */
+    protected $mockFacebookService;
 
     /**
      * @var Tx_Fluid_View_TemplateView
@@ -83,6 +94,15 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
         $this->facebookUser = new Tx_WsLogin_Domain_Model_FacebookUser();
         $this->facebookUser->setWsFacebookId($this->ws_facebook_id);
 
+        $this->mockUserRepository = $this->getMock(
+            'Tx_WsLogin_Domain_Repository_UserRepository',
+            array(
+                'findByUid',
+            ),
+            array(),
+            '',
+            FALSE
+        );
         $this->mockFacebookUserRepository = $this->getMock(
             'Tx_WsLogin_Domain_Repository_FacebookUserRepository',
             array(
@@ -102,6 +122,16 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
                 'login',
                 'logout',
                 'isLoggedIn',
+                'getLoggedInUserUid',
+            ),
+            array(),
+            '',
+            FALSE
+        );
+        $this->mockFacebookService = $this->getMock(
+            'Tx_WsLogin_Service_FacebookService',
+            array(
+                'getFacebook',
             ),
             array(),
             '',
@@ -136,13 +166,16 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
 
         $this->fixture->injectFacebookUserRepository($this->mockFacebookUserRepository);
         $this->fixture->injectLoginService($this->mockLoginService);
+        $this->fixture->injectFacebookService($this->mockFacebookService);
         $this->fixture->_set('view', $this->mockView);
         $this->fixture->_set('request', $this->mockRequest);
     }
 
 	public function tearDown() {
+        unset($this->mockUserRepository);
         unset($this->mockFacebookUserRepository);
         unset($this->mockLoginService);
+        unset($this->mockFacebookService);
         unset($this->mockView);
         unset($this->fixture);
         unset($this->ws_facebook_id);
@@ -152,8 +185,45 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
     /**
      * @test
      */
-    public function showStatusActionWorks() {
+    public function showStatusActionWorksIfUserIsLoggedIn() {
         $loggedIn = true;
+        $uid = 123;
+        $user = new Tx_WsLogin_Domain_Model_FacebookUser();
+
+        $this->mockLoginService->expects($this->once())
+            ->method('isLoggedIn')
+            ->will($this->returnValue($loggedIn));
+
+        $this->mockView->expects($this->once())
+            ->method('assign')
+            ->with('loggedIn', $loggedIn);
+
+        $this->mockLoginService->expects($this->once())
+            ->method('getLoggedInUserUid')
+            ->will($this->returnValue($uid));
+
+        $this->mockUserRepository->expects($this->once())
+            ->method('findByUid')
+            ->with($uid)
+            ->will($this->returnValue($user));
+
+        // todo: this test doesnt pass the test:
+        // https://twitter.com/#!/PeterTheOne/status/202403363596410880
+        $this->mockView->expects($this->once())
+            ->method('assign')
+            ->with('user', $user);
+
+        $this->mockView->expects($this->once())
+            ->method('render');
+
+        $this->fixture->showStatusAction();
+    }
+
+    /**
+     * @test
+     */
+    public function showStatusActionWorksIfUserIsLoggedOut() {
+        $loggedIn = false;
 
         $this->mockLoginService->expects($this->once())
             ->method('isLoggedIn')
