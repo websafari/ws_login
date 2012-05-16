@@ -27,8 +27,6 @@
      *  This copyright notice MUST APPEAR in all copies of the script!
      ***************************************************************/
 
-require_once( t3lib_extMgm::extPath('ws_login') . 'Resources/PHP/facebook-php-sdk/facebook.php');
-
     /**
      * Test case for class Tx_WsLogin_Domain_Repository_UserRepositoryTest.
      *
@@ -59,7 +57,12 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepositoryTest extends Tx_Extbase
     /**
      * @var Facebook
      */
-    protected $facebookMock;
+    protected $mockFacebook;
+
+    /**
+     * @var Tx_WsLogin_Service_FacebookService
+     */
+    protected $mockFacebookService;
 
     /**
      * @var int
@@ -70,15 +73,24 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepositoryTest extends Tx_Extbase
         $this->testingFramework = new Tx_Phpunit_Framework('fe_users');
         $this->fixture = t3lib_div::makeInstance('Tx_WsLogin_Domain_Repository_FacebookUserRepository');
 
-        $this->facebookMock = $this->getMock(
+        $this->mockFacebook = $this->getMock(
             'Facebook',
             array('getUser', 'api'),
             array(),
             '',
             FALSE
         );
+        $this->mockFacebookService = $this->getMock(
+            'Tx_WsLogin_Service_FacebookService',
+            array(
+                'getFacebook',
+            ),
+            array(),
+            '',
+            FALSE
+        );
 
-        $this->fixture->setFacebook($this->facebookMock);
+        $this->fixture->injectFacebookService($this->mockFacebookService);
 
         $this->ws_facebook_id = '123456';
     }
@@ -86,7 +98,8 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepositoryTest extends Tx_Extbase
     public function tearDown() {
         $this->testingFramework->cleanUp();
         unset($this->fixture);
-        unset($this->facebookMock);
+        unset($this->mockFacebook);
+        unset($this->mockFacebookService);
         unset($this->ws_facebook_id);
     }
 
@@ -94,7 +107,11 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepositoryTest extends Tx_Extbase
      * @test
      */
     public function getUserIdFromAPIWorks() {
-        $this->facebookMock->expects($this->once())
+        $this->mockFacebookService->expects($this->once())
+            ->method('getFacebook')
+            ->will($this->returnValue($this->mockFacebook));
+
+        $this->mockFacebook->expects($this->once())
             ->method('getUser')
             ->will($this->returnValue($this->ws_facebook_id));
 
@@ -105,7 +122,11 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepositoryTest extends Tx_Extbase
      * @test
      */
     public function getUserFromAPIWorks() {
-        $this->facebookMock->expects($this->once())
+        $this->mockFacebookService->expects($this->once())
+            ->method('getFacebook')
+            ->will($this->returnValue($this->mockFacebook));
+
+        $this->mockFacebook->expects($this->once())
             ->method('getUser')
             ->will($this->returnValue($this->ws_facebook_id));
 

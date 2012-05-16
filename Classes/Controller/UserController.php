@@ -74,6 +74,13 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
     protected $loginService;
 
     /**
+     * facebookService
+     *
+     * @var Tx_WsLogin_Service_FacebookService
+     */
+    protected $facebookService;
+
+    /**
      * injectUserRepository
      *
      * @param Tx_WsLogin_Domain_Repository_UserRepository $userRepository
@@ -114,6 +121,16 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
      */
     public function injectLoginService(Tx_WsLogin_Service_LoginService $loginService) {
         $this->loginService = $loginService;
+    }
+
+    /**
+     * injectFacebookService
+     *
+     * @param Tx_WsLogin_Service_FacebookService $facebookService
+     * @return void
+     */
+    public function injectFacebookService(Tx_WsLogin_Service_FacebookService $facebookService) {
+        $this->facebookService = $facebookService;
     }
 
     /**
@@ -172,7 +189,7 @@ class Tx_WsLogin_Controller_UserController extends Tx_Extbase_MVC_Controller_Act
 	public function facebookLoginAction() {
         $facebookUserAPI = $this->facebookUserRepository->getUserFromAPI();
         if ($facebookUserAPI === null) {
-            $this->redirectToUri($this->facebookUserRepository->getFacebook()->getLoginUrl());
+            $this->redirectToUri($this->facebookService->getFacebook()->getLoginUrl());
             return;
         }
         $ws_facebook_id = $facebookUserAPI->getWsFacebookId();
