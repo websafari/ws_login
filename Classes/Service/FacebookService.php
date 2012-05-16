@@ -87,7 +87,6 @@ class Tx_WsLogin_Service_FacebookService implements t3lib_Singleton {
     public function initializeObject() {
         $appId = $this->settingsService->getByPath('facebook-api.appId');
         $secret = $this->settingsService->getByPath('facebook-api.secret');
-        debug($secret);
 
         $this->facebook = $this->objectManager->create(
             'Facebook',
