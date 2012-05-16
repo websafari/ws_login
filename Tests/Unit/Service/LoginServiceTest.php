@@ -28,7 +28,7 @@
  ***************************************************************/
 
 /**
- * Test case for class Tx_WsLogin_Domain_Repository_UserRepositoryTest.
+ * Test case for class Tx_WsLogin_Service_LoginService.
  *
  * @version $Id$
  * @copyright Copyright belongs to the respective authors

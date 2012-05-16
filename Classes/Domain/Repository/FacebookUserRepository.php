@@ -45,19 +45,17 @@
 class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Domain_Repository_UserRepository {
 
     /**
-     * Facebook from @link https://github.com/facebook/facebook-php-sdk facebook-php-sdk
-     *
-     * @var Facebook
+     * @var Tx_WsLogin_Service_FacebookService
      */
-    protected $facebook;
+    protected $facebookService;
 
     /**
-     * inject the facebook
+     * inject FacebookService
      *
-     * @param Facebook $facebook
+     * @param Tx_WsLogin_Service_FacebookService $facebookService
      */
-    public function injectFacebook(Facebook $facebook) {
-        $this->facebook = $facebook;
+    public function injectFacebookService(Tx_WsLogin_Service_FacebookService $facebookService) {
+        $this->facebookService = $facebookService;
     }
 
     /**
@@ -66,12 +64,13 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
      * @return string Facebook Id.
      */
     public function getUserIdFromAPI() {
-        $userId = $this->facebook->getUser();
+        $facebook = $this->facebookService->getFacebook();
+        $userId = $facebook->getUser();
 
         if ($userId) {
             try {
                 // Proceed knowing you have a logged in user who's authenticated.
-                $user_profile = $this->facebook->api('/me');
+                $user_profile = $facebook->api('/me');
             } catch (FacebookApiException $e) {
                 error_log($e);
                 $userId = null;
@@ -86,13 +85,14 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
      * @return Tx_WsLogin_Domain_Model_FacebookUser user created from FB API data.
      */
     public function getUserFromAPI() {
-        $userId = $this->facebook->getUser();
+        $facebook = $this->facebookService->getFacebook();
+        $userId = $facebook->getUser();
         $user_profile = null;
 
         if ($userId) {
             try {
                 // Proceed knowing you have a logged in user who's authenticated.
-                $user_profile = $this->facebook->api('/me');
+                $user_profile = $facebook->api('/me');
             } catch (FacebookApiException $e) {
                 error_log($e);
                 $userId = null;

@@ -60,6 +60,11 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
     protected $mockLoginService;
 
     /**
+     * @var Tx_WsLogin_Service_FacebookService
+     */
+    protected $mockFacebookService;
+
+    /**
      * @var Tx_Fluid_View_TemplateView
      */
     protected $mockView;
@@ -123,6 +128,15 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
             '',
             FALSE
         );
+        $this->mockFacebookService = $this->getMock(
+            'Tx_WsLogin_Service_FacebookService',
+            array(
+                'getFacebook',
+            ),
+            array(),
+            '',
+            FALSE
+        );
         $this->fixture = $this->getAccessibleMock(
             'Tx_WsLogin_Controller_UserController',
             array(
@@ -152,6 +166,7 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
 
         $this->fixture->injectFacebookUserRepository($this->mockFacebookUserRepository);
         $this->fixture->injectLoginService($this->mockLoginService);
+        $this->fixture->injectFacebookService($this->mockFacebookService);
         $this->fixture->_set('view', $this->mockView);
         $this->fixture->_set('request', $this->mockRequest);
     }
@@ -160,6 +175,7 @@ class Tx_WsLogin_Controller_UserControllerTest extends Tx_Extbase_Tests_Unit_Bas
         unset($this->mockUserRepository);
         unset($this->mockFacebookUserRepository);
         unset($this->mockLoginService);
+        unset($this->mockFacebookService);
         unset($this->mockView);
         unset($this->fixture);
         unset($this->ws_facebook_id);
