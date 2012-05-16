@@ -27,9 +27,6 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-
-require_once( t3lib_extMgm::extPath('ws_login') . 'Resources/PHP/facebook-php-sdk/facebook.php');
-
 /**
  * Repository for FacebookUser, also connects to Facebook API.
  *
@@ -55,35 +52,12 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepository extends Tx_WsLogin_Dom
     protected $facebook;
 
     /**
-     * Contructor creates Facebook instance
-     *
-     * @todo: move Facebook config where it belongs..
-     * @todo: reset App secret
-     */
-    public function __construct() {
-        $this->setFacebook(new Facebook(array(
-            'appId' =>'383342618383884',
-            'secret' => 'f169724bfaef6c944815026a23718e1c')
-        ));
-        parent::__construct();
-    }
-
-    /**
-     * Sets the facebook
+     * inject the facebook
      *
      * @param Facebook $facebook
      */
-    public function setFacebook(Facebook $facebook) {
+    public function injectFacebook(Facebook $facebook) {
         $this->facebook = $facebook;
-    }
-
-    /**
-     * Gets the facebook
-     *
-     * @return Facebook $facebook
-     */
-    public function getFacebook() {
-        return $this->facebook;
     }
 
     /**

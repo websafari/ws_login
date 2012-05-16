@@ -27,8 +27,6 @@
      *  This copyright notice MUST APPEAR in all copies of the script!
      ***************************************************************/
 
-require_once( t3lib_extMgm::extPath('ws_login') . 'Resources/PHP/facebook-php-sdk/facebook.php');
-
     /**
      * Test case for class Tx_WsLogin_Domain_Repository_UserRepositoryTest.
      *
@@ -78,7 +76,7 @@ class Tx_WsLogin_Domain_Repository_FacebookUserRepositoryTest extends Tx_Extbase
             FALSE
         );
 
-        $this->fixture->setFacebook($this->facebookMock);
+        $this->fixture->injectFacebook($this->facebookMock);
 
         $this->ws_facebook_id = '123456';
     }
